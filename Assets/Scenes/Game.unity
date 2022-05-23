@@ -246,10 +246,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 619685298768409035, guid: 2902f8d6470c32540bed2020f6478fbe, type: 3}
-  minX: 1
-  minZ: 1
-  maxX: 9
-  maxZ: 9
+  minX: -4
+  minZ: -4
+  maxX: 4
+  maxZ: 4
 --- !u!4 &1290051188
 Transform:
   m_ObjectHideFlags: 0
