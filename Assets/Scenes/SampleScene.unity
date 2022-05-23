@@ -154,7 +154,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabBase: {fileID: 5351874489362099936, guid: 5bcb05791260b68409074e32a6402428, type: 3}
   prefabCube: {fileID: 2981862379763611747, guid: 801408b609b76f24a8c6eb90c7ada1d5, type: 3}
-  Cube: {fileID: 0}
+  prefabBox: {fileID: 2302594604913418438, guid: 411616c0ff4fd804fb795b121bde54c7, type: 3}
+  Cube: {fileID: 2302594604913418438, guid: 411616c0ff4fd804fb795b121bde54c7, type: 3}
   sizeX: 10
   sizeZ: 10
   cam: {fileID: 1687258584}
