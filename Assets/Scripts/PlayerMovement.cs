@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        view = GetComponent<PhotonView>();
     }
 
     private void Update()
