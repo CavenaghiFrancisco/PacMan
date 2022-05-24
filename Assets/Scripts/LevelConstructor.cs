@@ -8,7 +8,6 @@ public class LevelConstructor : MonoBehaviour
     [SerializeField] private GameObject prefabBase;
     [SerializeField] private GameObject prefabCube;
     [SerializeField] private GameObject prefabBox;
-    [SerializeField] private GameObject Cube;
     [SerializeField] private int sizeX;
     [SerializeField] private int sizeZ;
     [SerializeField] private Camera cam;
@@ -50,15 +49,12 @@ public class LevelConstructor : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-        foreach (Tile tile in tiles)
-            tile.GetComponent<MeshRenderer>().material.color = Color.white;
         if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition),out hit, 100,layerMask))
         {
             foreach (Tile tile in tiles)
             {
                 if (hit.transform.gameObject == tile.gameObject)
                 {
-                    tile.GetComponent<MeshRenderer>().material.color = Color.red;
                     Construct(tile);
                 }
                 
@@ -68,7 +64,7 @@ public class LevelConstructor : MonoBehaviour
 
     private void Construct(Tile tile)
     {
-        if (Input.GetMouseButtonDown(0) )
+        if (Input.GetMouseButton(0) )
         {
             GameObject construction = null;
             switch (type)
