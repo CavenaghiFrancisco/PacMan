@@ -32,17 +32,21 @@ public class LevelConstructor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        sizeX = 10;
-        sizeZ = 10;
-        for(int i = 0; i < sizeX; i++)
+        float camPosX = 0;
+        float camPosZ = 0;
+        for (int i = 0; i < sizeZ; i++)
         {
-            for(int j = 0; j < sizeZ; j++)
+            for(int j = 0; j < sizeX; j++)
             {
-                Tile tile = Instantiate(prefabBase, new Vector3(prefabBase.transform.localScale.x * i, -prefabBase.transform.localScale.y / 2, prefabBase.transform.localScale.z * j), Quaternion.identity).GetComponent<Tile>();
+                Tile tile = Instantiate(prefabBase, new Vector3(prefabBase.transform.localScale.x * j, -prefabBase.transform.localScale.y / 2, prefabBase.transform.localScale.z * i), Quaternion.identity).GetComponent<Tile>();
                 tiles.Add(tile);
+                tile.name = i + " " + j;
             }
         }
-        
+        Debug.Log(camPosX);
+        Debug.Log(camPosZ);
+        cam.transform.position = new Vector3(sizeX / 2, sizeZ > sizeX ? sizeZ : sizeX, sizeZ / 2);
+
     }
 
     // Update is called once per frame
@@ -88,6 +92,15 @@ public class LevelConstructor : MonoBehaviour
                     }
                     break;
             }
+        }
+    }
+
+    public void Clear()
+    {
+        foreach(Tile tile in tiles)
+        {
+            GameObject construction = null;
+            OnConstruct(construction, tile.ID);
         }
     }
     
