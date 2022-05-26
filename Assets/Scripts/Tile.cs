@@ -5,15 +5,24 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [SerializeField] private GameObject construction;
-
     [SerializeField]  private bool constructed;
+    [SerializeField] private int posX;
+    [SerializeField] private int posZ;
     private static int instance = 0;
     private int id;
+    private bool obligatoryWall;
+
 
     public bool Constructed
     {
         get { return constructed; }
         set { constructed = value; }
+    }
+
+    public bool ObligatoryWall
+    {
+        get { return obligatoryWall; }
+        set { obligatoryWall = value; }
     }
 
     public int ID
@@ -22,30 +31,67 @@ public class Tile : MonoBehaviour
         set { id = value; }
     }
 
-    private void Start()
+    public int PosX
     {
+        get { return posX; }
+        set { posX = value; }
+    }
+
+    public int PosZ
+    {
+        get { return posZ; }
+        set { posZ = value; }
+    }
+
+    private void Awake()
+    {
+        LevelConstructor.OnNormalConstruct += AssignConstruction;
+        LevelConstructor.OnEmpty += EmptyTile;
+        LevelConstructor.OnClear += Clear;
         id = instance;
         instance++;
-        LevelConstructor.OnConstruct += AssignConstruction;
         construction = null;
         constructed = false;
     }
 
-    private void AssignConstruction(GameObject construction, int IDTile)
+    private void AssignConstruction(GameObject construction, int x, int z)
     {
-        if(id == IDTile)
+        if(posX == x && posZ == z && !this.obligatoryWall)
         {
-            this.constructed = true;
-            if (construction != null)
+            if (!constructed)
             {
-                this.construction = construction;
+                this.constructed = true;
+                if (construction != null)
+                {
+                    this.construction = construction;
+                }                
             }
-            else
+        }
+    }
+
+    private void EmptyTile(int posX, int posZ)
+    {
+        if(this.posX == posX && this.posZ == posZ && !obligatoryWall)
+        {
+            if (construction)
             {
-                Destroy(this.construction);
-                this.construction = null;
-                this.constructed = false;
+                Destroy(construction);
             }
+            construction = null;
+            constructed = false;
+        }   
+    }
+
+    private void Clear()
+    {
+        if (!obligatoryWall)
+        {
+            if (this.construction)
+            {
+                Destroy(construction.gameObject);
+            }
+            construction = null;
+            constructed = false;
         }
     }
 }
