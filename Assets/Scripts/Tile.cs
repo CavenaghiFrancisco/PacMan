@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     [SerializeField]  private bool constructed;
     [SerializeField] private int posX;
     [SerializeField] private int posZ;
+    [SerializeField] private TypeOfConstruction type;
     private static int instance = 0;
     private int id;
     private bool obligatoryWall;
@@ -43,6 +44,12 @@ public class Tile : MonoBehaviour
         set { posZ = value; }
     }
 
+    public TypeOfConstruction Type
+    {
+        get { return type; }
+        set { type = value; }
+    }
+
     private void Awake()
     {
         LevelConstructor.OnNormalConstruct += AssignConstruction;
@@ -54,7 +61,7 @@ public class Tile : MonoBehaviour
         constructed = false;
     }
 
-    private void AssignConstruction(GameObject construction, int x, int z)
+    private void AssignConstruction(GameObject construction, int x, int z, TypeOfConstruction type)
     {
         if(posX == x && posZ == z && !this.obligatoryWall)
         {
@@ -64,6 +71,7 @@ public class Tile : MonoBehaviour
                 if (construction != null)
                 {
                     this.construction = construction;
+                    this.type = type;
                 }                
             }
         }
@@ -79,6 +87,7 @@ public class Tile : MonoBehaviour
             }
             construction = null;
             constructed = false;
+            type = TypeOfConstruction.EMPTY;
         }   
     }
 
@@ -92,6 +101,7 @@ public class Tile : MonoBehaviour
             }
             construction = null;
             constructed = false;
+            type = TypeOfConstruction.EMPTY;
         }
     }
 }

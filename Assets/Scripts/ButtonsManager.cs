@@ -73,7 +73,7 @@ public class ButtonsManager : MonoBehaviour
     {
         verticalMirror.Selected = false;
         horizontalMirror.Selected = false;
-        bothMirror.Selected = true;
+        bothMirror.Selected = !bothMirror.Selected;
         noneMirror.Selected = false;
        OnBothMirrorEnable?.Invoke();
     }

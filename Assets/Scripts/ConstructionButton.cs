@@ -17,17 +17,18 @@ public class ConstructionButton : MonoBehaviour
     private void Start()
     {
         image = GetComponent<Image>();
+        image.color = Color.blue;
     }
 
     private void Update()
     {
         if (selected)
         {
-            image.color = Color.green;
+            image.color = Color.cyan;
         }
         else
         {
-            image.color = Color.red;
+            image.color = Color.blue;
         }
     }
 }
