@@ -46,6 +46,7 @@ public class LevelConstructor : MonoBehaviour
         ButtonsManager.OnVerticalMirrorEnable += SetVerticalMirror;
         ButtonsManager.OnMirrorDisable += SetNoneMirror;
         ButtonsManager.OnBothMirrorEnable += SetBothMirror;
+        ButtonsManager.OnSave += SaveMap;
         for (int i = 0; i < sizeZ; i++)
         {
             for (int j = 0; j < sizeX; j++)
@@ -111,7 +112,6 @@ public class LevelConstructor : MonoBehaviour
                     break;
             }
         }
-        SaveMap();
     }
 
     private void Construct(Tile tile)
@@ -254,21 +254,22 @@ public class LevelConstructor : MonoBehaviour
 
     private void SaveMap()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        MapSave mapSave = new MapSave
         {
-            MapSave mapSave = new MapSave
-            {
-                ghostPositions = ghosts,
-                playerPositions = players,
-                wallPositions = walls,
-                pointPositions = points,
-            };
-            string mapJson = JsonUtility.ToJson(mapSave,true);
-            string mapName = inputField.text;
-            string mapJsonEncoded = Base64Encode(mapJson);
-            string path = Application.persistentDataPath + "/" + mapName + ".dat";
-            File.WriteAllText(path, mapJsonEncoded);
+            ghostPositions = ghosts,
+            playerPositions = players,
+            wallPositions = walls,
+            pointPositions = points,
+        };
+        string mapJson = JsonUtility.ToJson(mapSave,true);
+        string mapName = inputField.text;
+        string mapJsonEncoded = Base64Encode(mapJson);
+        string path = Application.persistentDataPath + "/maps";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
         }
+        File.WriteAllText(path + "/" + mapName + ".dat", mapJsonEncoded);
     }
 
     private void LoadMap()
@@ -283,8 +284,6 @@ public class LevelConstructor : MonoBehaviour
         public List<Vector3> playerPositions = new List<Vector3>();
         public List<Vector3> ghostPositions = new List<Vector3>();
     }
-
-    
 }
 
 
