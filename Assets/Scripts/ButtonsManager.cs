@@ -14,6 +14,7 @@ public class ButtonsManager : MonoBehaviour
     static public Action OnHorizontalMirrorEnable;
     static public Action OnMirrorDisable;
     static public Action OnBothMirrorEnable;
+    static public Action OnLevelSelected;
 
     private void Start()
     {
@@ -77,6 +78,13 @@ public class ButtonsManager : MonoBehaviour
         noneMirror.Selected = false;
        OnBothMirrorEnable?.Invoke();
     }
+
+    public void SelectLevelToLoad()
+    {
+        OnLevelSelected();
+    }
+
+
 }
 
 
