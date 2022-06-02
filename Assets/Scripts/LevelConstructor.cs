@@ -270,6 +270,7 @@ public class LevelConstructor : MonoBehaviour
             Directory.CreateDirectory(path);
         }
         File.WriteAllText(path + "/" + mapName + ".dat", mapJsonEncoded);
+        Debug.Log(Base64Decode(mapJsonEncoded));
     }
 
     private void LoadMap()

@@ -1962,7 +1962,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 699648338}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2010019273}
+        m_TargetAssemblyTypeName: ScrollManager, Assembly-CSharp
+        m_MethodName: DeleteLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &699648338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2033,8 +2045,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1298}
+  m_AnchoredPosition: {x: 0, y: -0.0000133490585}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &886265844
 GameObject:
@@ -2276,8 +2288,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 291910824}
   m_HandleRect: {fileID: 291910823}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.1540832
+  m_Value: 0
+  m_Size: 0.99878967
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4532,8 +4544,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 867416695}
-  bttnPrefab: {fileID: 7416519077405470960, guid: 2558eab21d0057441b81ad062d205db9, type: 3}
+  bttnPrefab: {fileID: 2829726113739458708, guid: 02b8a51de54bb7d45968c46e5c87d2e8, type: 3}
   levels: []
+  levelsName: []
+  buttons: []
 --- !u!1 &2070983928
 GameObject:
   m_ObjectHideFlags: 0
