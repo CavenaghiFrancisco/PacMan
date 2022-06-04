@@ -50,7 +50,7 @@ public class ScrollManager : MonoBehaviour
 
             for (int i = 0; i < levels.Length; i++)
             {
-                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + buttons.Count * 60);
+                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 60);
                 int idIncrementer = 0;
                 foreach (LevelButton button in buttons)
                 {
@@ -84,7 +84,8 @@ public class ScrollManager : MonoBehaviour
                 {
                     buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 60 * buttons[j].ID , 0);
                 }
-                
+                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 60);
+
 
             }
             
