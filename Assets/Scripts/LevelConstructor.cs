@@ -26,6 +26,7 @@ public class LevelConstructor : MonoBehaviour
     static public Action<GameObject, int, int, TypeOfConstruction> OnNormalConstruct;
     static public Action<int, int> OnEmpty;
     static public Action OnClear;
+    static public Action OnSaveMap;
     private LayerMask layerMask = 1 << 6;
     private bool horizontalMirror = false;
     private bool verticalMirror = false;
@@ -271,6 +272,7 @@ public class LevelConstructor : MonoBehaviour
         }
         File.WriteAllText(path + "/" + mapName + ".dat", mapJsonEncoded);
         Debug.Log(Base64Decode(mapJsonEncoded));
+        OnSaveMap();
     }
 
     private void LoadMap()
