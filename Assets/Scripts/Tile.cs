@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Tile : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Tile : MonoBehaviour
     private static int instance = 0;
     private int id;
     private bool obligatoryWall;
+    public static Action<TypeOfConstruction> OnPlayerButtonEnable;
 
 
     public bool Constructed
@@ -87,6 +89,7 @@ public class Tile : MonoBehaviour
             }
             construction = null;
             constructed = false;
+            OnPlayerButtonEnable(type);
             type = TypeOfConstruction.EMPTY;
         }   
     }
@@ -101,6 +104,7 @@ public class Tile : MonoBehaviour
             }
             construction = null;
             constructed = false;
+            OnPlayerButtonEnable(type);
             type = TypeOfConstruction.EMPTY;
         }
     }

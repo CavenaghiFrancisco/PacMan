@@ -11,7 +11,9 @@ public class LevelConstructor : MonoBehaviour
 {
     [SerializeField] private GameObject prefabBase;
     [SerializeField] private GameObject prefabCube;
-    [SerializeField] private GameObject prefabBox;
+    [SerializeField] private GameObject prefabPoint;
+    [SerializeField] private GameObject prefabPill;
+    [SerializeField] private GameObject prefabPlayer;
     [SerializeField] private int sizeX;
     [SerializeField] private int sizeZ;
     [SerializeField] private Camera cam;
@@ -19,7 +21,12 @@ public class LevelConstructor : MonoBehaviour
     private List<Vector3> walls = new List<Vector3>();
     private List<Vector3> points = new List<Vector3>();
     private List<Vector3> players = new List<Vector3>();
-    private List<Vector3> ghosts = new List<Vector3>();
+    private List<Vector3> pills = new List<Vector3>();
+    private Vector3 pacmanPosition;
+    private Vector3 blinkyPosition;
+    private Vector3 inkyPosition;
+    private Vector3 pinkyPosition;
+    private Vector3 clydePosition;
     private Vector3 mousePosition;
     private List<Tile> tiles = new List<Tile>();
     private TypeOfConstruction type = TypeOfConstruction.EMPTY;
@@ -27,11 +34,21 @@ public class LevelConstructor : MonoBehaviour
     static public Action<int, int> OnEmpty;
     static public Action OnClear;
     static public Action OnSaveMap;
+    static public Action<TypeOfConstruction> OnPlayerFound;
+    static public Action<TypeOfConstruction> OnInkyFound;
+    static public Action<TypeOfConstruction> OnBlinkyFound;
+    static public Action<TypeOfConstruction> OnPinkyFound;
+    static public Action<TypeOfConstruction> OnClydeFound;
     private LayerMask layerMask = 1 << 6;
     private bool horizontalMirror = false;
     private bool verticalMirror = false;
     private bool noneMirror = true;
     private bool bothMirror = false;
+    private bool playerSpawned;
+    private bool pinkySpawned;
+    private bool blinkySpawned;
+    private bool inkySpawned;
+    private bool clydeSpawned;
     
 
     public void ChangeTypeOfConstruction(int value)
@@ -93,9 +110,14 @@ public class LevelConstructor : MonoBehaviour
         }
         walls.Clear();
         players.Clear();
-        ghosts.Clear();
         points.Clear();
-        foreach(Tile tile in tiles)
+        pills.Clear();
+        playerSpawned = false;
+        pinkySpawned = false;
+        blinkySpawned = false;
+        inkySpawned = false;
+        clydeSpawned = false;
+        foreach (Tile tile in tiles)
         {
             switch (tile.Type)
             {
@@ -104,9 +126,31 @@ public class LevelConstructor : MonoBehaviour
                     break;
                 case TypeOfConstruction.PLAYER:
                     players.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
+                    OnPlayerFound(TypeOfConstruction.PLAYER);
+                    playerSpawned = true;
                     break;
-                case TypeOfConstruction.GHOST:
-                    ghosts.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
+                case TypeOfConstruction.PILL:
+                    pills.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
+                    break;
+                case TypeOfConstruction.INKY:
+                    inkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    OnInkyFound(TypeOfConstruction.INKY);
+                    inkySpawned = true;
+                    break;
+                case TypeOfConstruction.PINKY:
+                    pinkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    OnPinkyFound(TypeOfConstruction.PINKY);
+                    pinkySpawned = true;
+                    break;
+                case TypeOfConstruction.BLINKY:
+                    blinkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    OnBlinkyFound(TypeOfConstruction.BLINKY);
+                    blinkySpawned = true;
+                    break;
+                case TypeOfConstruction.CLYDE:
+                    clydePosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    OnClydeFound(TypeOfConstruction.CLYDE);
+                    clydeSpawned = true;
                     break;
                 case TypeOfConstruction.POINT:
                     points.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
@@ -148,47 +192,61 @@ public class LevelConstructor : MonoBehaviour
                     if (!tile.Constructed && !tile.ObligatoryWall)
                     {
                         type = TypeOfConstruction.POINT;
-                        construction = Instantiate(prefabBox, new Vector3(tile.transform.position.x, prefabBox.transform.localScale.y / 2, tile.transform.position.z), Quaternion.identity);
+                        construction = Instantiate(prefabPoint, new Vector3(tile.transform.position.x, prefabPoint.transform.localScale.y / 2, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.PILL:
+                    if (!tile.Constructed && !tile.ObligatoryWall)
+                    {
+                        type = TypeOfConstruction.PILL;
+                        construction = Instantiate(prefabPill, new Vector3(tile.transform.position.x, prefabPill.transform.localScale.y / 2, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.PLAYER:
+                    if (!tile.Constructed && !tile.ObligatoryWall && !playerSpawned)
+                    {
+                        type = TypeOfConstruction.PLAYER;
+                        construction = Instantiate(prefabPlayer, new Vector3(tile.transform.position.x, 0.1f, tile.transform.position.z), Quaternion.identity);
                     }
                     break;
             }
             if (construction != null)
             {
                 OnNormalConstruct?.Invoke(construction, tile.PosX, tile.PosZ,type);
-                if (horizontalMirror || bothMirror)
+                if(type != TypeOfConstruction.PLAYER && type != TypeOfConstruction.CLYDE && type != TypeOfConstruction.PINKY && type != TypeOfConstruction.BLINKY && type != TypeOfConstruction.INKY)
                 {
-                    GameObject constructionHorMirror = null;
-                    if (tile.PosX != (tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX) && construction && !GetTile(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ).Constructed)
+                    if (horizontalMirror || bothMirror)
                     {
-                        constructionHorMirror = Instantiate(construction, new Vector3(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, construction.transform.localScale.y / 2, tile.PosZ), Quaternion.identity);
-                        OnNormalConstruct?.Invoke(constructionHorMirror, tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ, type);
-                    }
+                        GameObject constructionHorMirror = null;
+                        if (tile.PosX != (tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX) && construction && !GetTile(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ).Constructed)
+                        {
+                            constructionHorMirror = Instantiate(construction, new Vector3(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, construction.transform.localScale.y / 2, tile.PosZ), Quaternion.identity);
+                            OnNormalConstruct?.Invoke(constructionHorMirror, tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ, type);
+                        }
 
-                }
-                if (verticalMirror || bothMirror)
-                {
-                    GameObject constructionVerMirror = null;
-                    if (tile.PosZ != (tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ) && construction && !GetTile(tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ).Constructed)
-                    {
-                        constructionVerMirror = Instantiate(construction, new Vector3(tile.PosX, construction.transform.localScale.y / 2, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ), Quaternion.identity);
-                        OnNormalConstruct?.Invoke(constructionVerMirror, tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ, type);
                     }
+                    if (verticalMirror || bothMirror)
+                    {
+                        GameObject constructionVerMirror = null;
+                        if (tile.PosZ != (tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ) && construction && !GetTile(tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ).Constructed)
+                        {
+                            constructionVerMirror = Instantiate(construction, new Vector3(tile.PosX, construction.transform.localScale.y / 2, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ), Quaternion.identity);
+                            OnNormalConstruct?.Invoke(constructionVerMirror, tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ, type);
+                        }
 
-                }
-                if (bothMirror)
-                {
-                    GameObject constructionVerMirror = null;
-                    if (tile.PosZ != (tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ) && tile.PosX != (tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX) && construction && !GetTile(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ).Constructed)
+                    }
+                    if (bothMirror)
                     {
-                        constructionVerMirror = Instantiate(construction, new Vector3(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, construction.transform.localScale.y / 2, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ), Quaternion.identity);
-                        OnNormalConstruct?.Invoke(constructionVerMirror, tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ, type);
+                        GameObject constructionVerMirror = null;
+                        if (tile.PosZ != (tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ) && tile.PosX != (tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX) && construction && !GetTile(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ).Constructed)
+                        {
+                            constructionVerMirror = Instantiate(construction, new Vector3(tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, construction.transform.localScale.y / 2, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ), Quaternion.identity);
+                            OnNormalConstruct?.Invoke(constructionVerMirror, tile.PosX < sizeX ? sizeX - 1 - tile.PosX : sizeX - tile.PosX, tile.PosZ < sizeZ ? sizeZ - 1 - tile.PosZ : sizeZ - tile.PosZ, type);
+                        }
                     }
                 }
+                
             }
-
-
-
-
         }
     }
 
@@ -257,7 +315,6 @@ public class LevelConstructor : MonoBehaviour
     {
         MapSave mapSave = new MapSave
         {
-            ghostPositions = ghosts,
             playerPositions = players,
             wallPositions = walls,
             pointPositions = points,
@@ -284,8 +341,13 @@ public class LevelConstructor : MonoBehaviour
     {
         public List<Vector3> wallPositions = new List<Vector3>();
         public List<Vector3> pointPositions = new List<Vector3>();
+        public List<Vector3> pillPositions = new List<Vector3>();
         public List<Vector3> playerPositions = new List<Vector3>();
-        public List<Vector3> ghostPositions = new List<Vector3>();
+        public Vector3 pacmanPosition;
+        public Vector3 blinkyPosition;
+        public Vector3 inkyPosition;
+        public Vector3 pinkyPosition;
+        public Vector3 clydePosition;
     }
 }
 

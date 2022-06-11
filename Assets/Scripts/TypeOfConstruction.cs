@@ -7,6 +7,10 @@ public enum TypeOfConstruction
     WALL,
     POINT,
     EMPTY,
+    PILL,
     PLAYER,
-    GHOST,
+    BLINKY,
+    INKY,
+    PINKY,
+    CLYDE
 }

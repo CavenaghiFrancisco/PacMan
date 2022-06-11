@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
 public class ButtonsManager : MonoBehaviour
 {
@@ -10,6 +12,11 @@ public class ButtonsManager : MonoBehaviour
     [SerializeField] private ConstructionButton verticalMirror;
     [SerializeField] private ConstructionButton horizontalMirror;
     [SerializeField] private ConstructionButton bothMirror;
+    [SerializeField] private Button playerBttn;
+    [SerializeField] private Button inkyBttn;
+    [SerializeField] private Button pinkyBttn;
+    [SerializeField] private Button blinkyBttn;
+    [SerializeField] private Button clydeBttn;
     static public Action OnVerticalMirrorEnable;
     static public Action OnHorizontalMirrorEnable;
     static public Action OnMirrorDisable;
@@ -18,6 +25,8 @@ public class ButtonsManager : MonoBehaviour
 
     private void Start()
     {
+        LevelConstructor.OnPlayerFound += DisableButton;
+        Tile.OnPlayerButtonEnable += EnableButton;
         noneMirror.Selected = true;
         OnMirrorDisable?.Invoke();
     }
@@ -27,6 +36,14 @@ public class ButtonsManager : MonoBehaviour
         if(!verticalMirror.Selected && !horizontalMirror.Selected && !bothMirror.Selected)
         {
             noneMirror.Selected = true;
+        }
+        GameObject bttn = EventSystem.current.currentSelectedGameObject;
+        if (bttn == pinkyBttn.gameObject || bttn == inkyBttn.gameObject || bttn == blinkyBttn.gameObject || bttn == clydeBttn.gameObject || bttn == playerBttn.gameObject)
+        {
+            foreach(ConstructionButton button in buttons)
+            {
+                button.Selected = false;
+            }
         }
     }
 
@@ -84,6 +101,49 @@ public class ButtonsManager : MonoBehaviour
         OnSave();
     }
 
+    public void DisableButton(TypeOfConstruction type)
+    {
+        switch (type)
+        {
+            case TypeOfConstruction.PLAYER:
+                playerBttn.interactable = false;
+                break;
+            case TypeOfConstruction.INKY:
+                inkyBttn.interactable = false;
+                break;
+            case TypeOfConstruction.BLINKY:
+                blinkyBttn.interactable = false;
+                break;
+            case TypeOfConstruction.PINKY:
+                pinkyBttn.interactable = false;
+                break;
+            case TypeOfConstruction.CLYDE:
+                clydeBttn.interactable = false;
+                break;
+        }
+    }
+
+    public void EnableButton(TypeOfConstruction type)
+    {
+        switch (type)
+        {
+            case TypeOfConstruction.PLAYER:
+                playerBttn.interactable = true;
+                break;
+            case TypeOfConstruction.INKY:
+                inkyBttn.interactable = true;
+                break;
+            case TypeOfConstruction.BLINKY:
+                blinkyBttn.interactable = true;
+                break;
+            case TypeOfConstruction.PINKY:
+                pinkyBttn.interactable = true;
+                break;
+            case TypeOfConstruction.CLYDE:
+                clydeBttn.interactable = true;
+                break;
+        }
+    }
 
 }
 

@@ -59,6 +59,7 @@ public class ScrollManager : MonoBehaviour
                     lvlButton.Path = levelsPath[k];
                     lvlButton.NameOfMap = levelsName[k];
                     lvlButton.transform.SetParent(content.transform);
+                    lvlButton.transform.localScale = new Vector3(1, 1, 1);
                     buttons.Add(lvlButton);
                 }
                 int IDIncrementer = 0;
@@ -69,9 +70,9 @@ public class ScrollManager : MonoBehaviour
                 }
                 for (int j = 0; j < buttons.Count; j++)
                 {
-                    buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 60 * buttons[j].ID, 0);
+                    buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
                 }
-                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 60);
+                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
             }
             else
             {
@@ -90,6 +91,7 @@ public class ScrollManager : MonoBehaviour
                     lvlBttn.Path = levelsPath[0];
                     lvlBttn.NameOfMap = levelsName[0];
                     lvlBttn.transform.SetParent(content.transform);
+                    lvlBttn.transform.localScale = new Vector3(1, 1, 1);
                     buttons.Add(lvlBttn);
                     int idIncrementer = 0;
                     foreach (LevelButton button in buttons)
@@ -99,9 +101,9 @@ public class ScrollManager : MonoBehaviour
                     }
                     for (int j = 0; j < buttons.Count; j++)
                     {
-                        buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 60 * buttons[j].ID, 0);
+                        buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
                     }
-                    contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 60);
+                    contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
                 }
             }
             
@@ -119,9 +121,9 @@ public class ScrollManager : MonoBehaviour
         }
         for (int j = 0; j < buttons.Count; j++)
         {
-            buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 60 * buttons[j].ID, 0);
+            buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
         }
-        contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 60);
+        contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
     }
 
     private void SelectLevel(string path, int id)
