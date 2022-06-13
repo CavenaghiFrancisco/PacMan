@@ -4,6 +4,8 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.EventSystems;
+using System;
 
 public class ScrollManager : MonoBehaviour
 {
@@ -12,9 +14,11 @@ public class ScrollManager : MonoBehaviour
     [SerializeField] private List<string> levels = new List<string>();
     [SerializeField] private List<string> levelsName = new List<string>();
     [SerializeField] private List<LevelButton> buttons = new List<LevelButton>();
+    [SerializeField] private Button loadButton;
     private string actualPath;
     private int actualID = -1;
     private RectTransform contentRT;
+    public static Action<string> OnLoadingLevel;
 
     private void Awake()
     {
@@ -31,6 +35,24 @@ public class ScrollManager : MonoBehaviour
     {
         LevelConstructor.OnSaveMap += ShowLevels;
         LevelButton.OnGetLevel += SelectLevel;
+    }
+
+    private void Update()
+    {
+        loadButton.interactable = false;
+        loadButton.image.color = Color.gray;
+        foreach (LevelButton button in buttons)
+        {
+            if (button.Selected)
+            {
+                loadButton.interactable = true;
+                loadButton.image.color = Color.white;
+            }
+            else
+            {
+                loadButton.interactable = false;
+            }
+        }
     }
 
     void ShowLevels()
@@ -70,9 +92,9 @@ public class ScrollManager : MonoBehaviour
                 }
                 for (int j = 0; j < buttons.Count; j++)
                 {
-                    buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
+                    buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 70 * buttons[j].ID, 0);
                 }
-                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
+                contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 70);
             }
             else
             {
@@ -101,9 +123,9 @@ public class ScrollManager : MonoBehaviour
                     }
                     for (int j = 0; j < buttons.Count; j++)
                     {
-                        buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
+                        buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 70 * buttons[j].ID, 0);
                     }
-                    contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
+                    contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 70);
                 }
             }
             
@@ -121,9 +143,9 @@ public class ScrollManager : MonoBehaviour
         }
         for (int j = 0; j < buttons.Count; j++)
         {
-            buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 120 * buttons[j].ID, 0);
+            buttons[j].GetComponent<RectTransform>().anchoredPosition = new Vector3(0, -10 - 70 * buttons[j].ID, 0);
         }
-        contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 120);
+        contentRT.sizeDelta = new Vector2(contentRT.sizeDelta.x, 10 + (buttons.Count) * 70);
     }
 
     private void SelectLevel(string path, int id)
@@ -137,9 +159,9 @@ public class ScrollManager : MonoBehaviour
         }
     }
 
-    public void ChooseLevel()
+    public void LoadLevel()
     {
-
+        OnLoadingLevel(actualPath);
     }
 
     public void DeleteLevel()
@@ -166,4 +188,6 @@ public class ScrollManager : MonoBehaviour
         }
         
     }
+
+    
 }

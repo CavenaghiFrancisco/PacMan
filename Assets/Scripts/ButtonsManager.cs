@@ -12,6 +12,7 @@ public class ButtonsManager : MonoBehaviour
     [SerializeField] private ConstructionButton verticalMirror;
     [SerializeField] private ConstructionButton horizontalMirror;
     [SerializeField] private ConstructionButton bothMirror;
+    [SerializeField] private Button saveBttn;
     [SerializeField] private Button playerBttn;
     [SerializeField] private Button inkyBttn;
     [SerializeField] private Button pinkyBttn;
@@ -25,8 +26,16 @@ public class ButtonsManager : MonoBehaviour
 
     private void Start()
     {
+        saveBttn.interactable = false;
         LevelConstructor.OnPlayerFound += DisableButton;
+        LevelConstructor.OnPlayerFound += EnableSaveBttn;
+        LevelConstructor.OnBlinkyFound += DisableButton;
+        LevelConstructor.OnInkyFound += DisableButton;
+        LevelConstructor.OnClydeFound += DisableButton;
+        LevelConstructor.OnPinkyFound += DisableButton;
         Tile.OnPlayerButtonEnable += EnableButton;
+        Tile.OnPlayerButtonEnable += DisableSaveBttn;
+
         noneMirror.Selected = true;
         OnMirrorDisable?.Invoke();
     }
@@ -94,6 +103,16 @@ public class ButtonsManager : MonoBehaviour
         bothMirror.Selected = !bothMirror.Selected;
         noneMirror.Selected = false;
        OnBothMirrorEnable?.Invoke();
+    }
+
+    private void EnableSaveBttn(TypeOfConstruction type)
+    {
+        saveBttn.interactable = true;
+    }
+
+    private void DisableSaveBttn(TypeOfConstruction type)
+    {
+        saveBttn.interactable = false;
     }
 
     public void Save()

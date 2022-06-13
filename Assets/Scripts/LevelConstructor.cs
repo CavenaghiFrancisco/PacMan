@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
-using TMPro;
-using System.Security.Cryptography;
+using UnityEngine.SceneManagement;
 
 public class LevelConstructor : MonoBehaviour
 {
@@ -14,6 +12,11 @@ public class LevelConstructor : MonoBehaviour
     [SerializeField] private GameObject prefabPoint;
     [SerializeField] private GameObject prefabPill;
     [SerializeField] private GameObject prefabPlayer;
+    [SerializeField] private GameObject prefabInky;
+    [SerializeField] private GameObject prefabPinky;
+    [SerializeField] private GameObject prefabBlinky;
+    [SerializeField] private GameObject prefabClyde;
+    [SerializeField] private GameObject overrideBox;
     [SerializeField] private int sizeX;
     [SerializeField] private int sizeZ;
     [SerializeField] private Camera cam;
@@ -22,12 +25,12 @@ public class LevelConstructor : MonoBehaviour
     private List<Vector3> points = new List<Vector3>();
     private List<Vector3> players = new List<Vector3>();
     private List<Vector3> pills = new List<Vector3>();
-    private Vector3 pacmanPosition;
-    private Vector3 blinkyPosition;
-    private Vector3 inkyPosition;
-    private Vector3 pinkyPosition;
-    private Vector3 clydePosition;
-    private Vector3 mousePosition;
+    private Vector3 pacmanPositionInMap;
+    private Vector3 blinkyPositionInMap;
+    private Vector3 inkyPositionInMap;
+    private Vector3 pinkyPositionInMap;
+    private Vector3 clydePositionInMap;
+    private Vector3 mousePositionInMap;
     private List<Tile> tiles = new List<Tile>();
     private TypeOfConstruction type = TypeOfConstruction.EMPTY;
     static public Action<GameObject, int, int, TypeOfConstruction> OnNormalConstruct;
@@ -49,7 +52,22 @@ public class LevelConstructor : MonoBehaviour
     private bool blinkySpawned;
     private bool inkySpawned;
     private bool clydeSpawned;
-    
+    private bool saving;
+    private string mapJson;
+    private string mapName;
+    private string mapJsonEncoded;
+    private string path;
+    [SerializeField] private TMPro.TMP_InputField verticalSize;
+    [SerializeField] private TMPro.TMP_InputField horizontalSize;
+    private int horizontalSizeMinLimit = 15;
+    private int verticalSizeMinLimit = 15;
+    private int horizontalSizeMaxLimit =30;
+    private int verticalSizeMaxLimit = 30;
+    [SerializeField] private Button levelCreatorBttn;
+    [SerializeField] private GameObject creatorPanel;
+    [SerializeField] private GameObject editorPanel;
+
+
 
     public void ChangeTypeOfConstruction(int value)
     {
@@ -59,12 +77,45 @@ public class LevelConstructor : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(Application.persistentDataPath);
         ButtonsManager.OnHorizontalMirrorEnable += SetHorizontalMirror;
         ButtonsManager.OnVerticalMirrorEnable += SetVerticalMirror;
         ButtonsManager.OnMirrorDisable += SetNoneMirror;
         ButtonsManager.OnBothMirrorEnable += SetBothMirror;
         ButtonsManager.OnSave += SaveMap;
+        ScrollManager.OnLoadingLevel += LoadMap;
+        levelCreatorBttn.interactable = false;
+    }
+
+    public void CheckMapSize()
+    {
+        string verSizeString = verticalSize.text.ToString();
+        string horSizeString = horizontalSize.text.ToString();
+        int vertSize;
+        int horSize;
+        if(int.TryParse(verSizeString, out vertSize) && int.TryParse(horSizeString, out horSize))
+        {
+            if (vertSize >= verticalSizeMinLimit && horSize >= horizontalSizeMinLimit && vertSize <= verticalSizeMaxLimit && horSize <= horizontalSizeMaxLimit)
+            {
+                levelCreatorBttn.interactable = true;
+                sizeZ = vertSize;
+                sizeX = horSize;
+            }
+            else
+            {
+                levelCreatorBttn.interactable = false;
+            }
+        }
+        else
+        {
+            levelCreatorBttn.interactable = false;
+        }
+        
+    }
+
+    public void CreateMap()
+    {
+        creatorPanel.SetActive(false);
+        editorPanel.SetActive(true);
         for (int i = 0; i < sizeZ; i++)
         {
             for (int j = 0; j < sizeX; j++)
@@ -91,21 +142,25 @@ public class LevelConstructor : MonoBehaviour
                 GameObject construction = Instantiate(prefabCube, new Vector3(tile.transform.position.x, prefabCube.transform.localScale.y / 2, tile.transform.position.z), Quaternion.identity);
             }
         }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 100, layerMask))
+        if (!saving)
         {
-            foreach (Tile tile in tiles)
+            RaycastHit hit;
+            if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hit, 100, layerMask))
             {
-                if (hit.transform.gameObject == tile.gameObject)
+                foreach (Tile tile in tiles)
                 {
-                    Construct(tile);
-                }
+                    if (hit.transform.gameObject == tile.gameObject)
+                    {
+                        Construct(tile);
+                    }
 
+                }
             }
         }
         walls.Clear();
@@ -133,22 +188,22 @@ public class LevelConstructor : MonoBehaviour
                     pills.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
                     break;
                 case TypeOfConstruction.INKY:
-                    inkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    inkyPositionInMap = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
                     OnInkyFound(TypeOfConstruction.INKY);
                     inkySpawned = true;
                     break;
                 case TypeOfConstruction.PINKY:
-                    pinkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    pinkyPositionInMap = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
                     OnPinkyFound(TypeOfConstruction.PINKY);
                     pinkySpawned = true;
                     break;
                 case TypeOfConstruction.BLINKY:
-                    blinkyPosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    blinkyPositionInMap = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
                     OnBlinkyFound(TypeOfConstruction.BLINKY);
                     blinkySpawned = true;
                     break;
                 case TypeOfConstruction.CLYDE:
-                    clydePosition = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
+                    clydePositionInMap = new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z);
                     OnClydeFound(TypeOfConstruction.CLYDE);
                     clydeSpawned = true;
                     break;
@@ -207,6 +262,34 @@ public class LevelConstructor : MonoBehaviour
                     {
                         type = TypeOfConstruction.PLAYER;
                         construction = Instantiate(prefabPlayer, new Vector3(tile.transform.position.x, 0.1f, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.INKY:
+                    if (!tile.Constructed && !tile.ObligatoryWall && !inkySpawned)
+                    {
+                        type = TypeOfConstruction.INKY;
+                        construction = Instantiate(prefabInky, new Vector3(tile.transform.position.x, 0f, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.PINKY:
+                    if (!tile.Constructed && !tile.ObligatoryWall && !pinkySpawned)
+                    {
+                        type = TypeOfConstruction.PINKY;
+                        construction = Instantiate(prefabPinky, new Vector3(tile.transform.position.x, 0f, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.BLINKY:
+                    if (!tile.Constructed && !tile.ObligatoryWall && !blinkySpawned)
+                    {
+                        type = TypeOfConstruction.BLINKY;
+                        construction = Instantiate(prefabBlinky, new Vector3(tile.transform.position.x, 0f, tile.transform.position.z), Quaternion.identity);
+                    }
+                    break;
+                case TypeOfConstruction.CLYDE:
+                    if (!tile.Constructed && !tile.ObligatoryWall && !clydeSpawned)
+                    {
+                        type = TypeOfConstruction.CLYDE;
+                        construction = Instantiate(prefabClyde, new Vector3(tile.transform.position.x, 0f, tile.transform.position.z), Quaternion.identity);
                     }
                     break;
             }
@@ -313,42 +396,65 @@ public class LevelConstructor : MonoBehaviour
 
     private void SaveMap()
     {
+        saving = true;
         MapSave mapSave = new MapSave
         {
+            mapSizeX = sizeX,
+            mapSizeZ = sizeZ,
             playerPositions = players,
             wallPositions = walls,
             pointPositions = points,
+            inkyPosition = inkyPositionInMap,
+            blinkyPosition = blinkyPositionInMap,
+            pinkyPosition = pinkyPositionInMap,
+            clydePosition = clydePositionInMap,
+            pillPositions = pills,
         };
-        string mapJson = JsonUtility.ToJson(mapSave,true);
-        string mapName = inputField.text;
-        string mapJsonEncoded = Base64Encode(mapJson);
-        string path = Application.persistentDataPath + "/maps";
+        mapJson = JsonUtility.ToJson(mapSave,true);
+        mapName = inputField.text;
+        mapJsonEncoded = Base64Encode(mapJson);
+        path = Application.persistentDataPath + "/maps";
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
         }
+        if(File.Exists(path + "/" + mapName + ".dat"))
+        {
+            overrideBox.SetActive(true);
+        }
+        else
+        {
+            ConfirmSave();
+        }
+    }
+
+    public void ConfirmSave()
+    {
         File.WriteAllText(path + "/" + mapName + ".dat", mapJsonEncoded);
-        Debug.Log(Base64Decode(mapJsonEncoded));
         OnSaveMap();
+        HideOverrideBox();
+        saving = false;
+        Debug.Log(Base64Decode(mapJsonEncoded));
     }
 
-    private void LoadMap()
+    public void HideOverrideBox()
     {
-        
+        overrideBox.SetActive(false);
+        saving = false;
     }
 
-    private class MapSave
+
+    public void LoadMap(string pathToBeLoaded)
     {
-        public List<Vector3> wallPositions = new List<Vector3>();
-        public List<Vector3> pointPositions = new List<Vector3>();
-        public List<Vector3> pillPositions = new List<Vector3>();
-        public List<Vector3> playerPositions = new List<Vector3>();
-        public Vector3 pacmanPosition;
-        public Vector3 blinkyPosition;
-        public Vector3 inkyPosition;
-        public Vector3 pinkyPosition;
-        public Vector3 clydePosition;
+        if (File.Exists(pathToBeLoaded))
+        {
+            string file = File.ReadAllText(pathToBeLoaded);
+            LevelLoader.Instance.mapSave = JsonUtility.FromJson<MapSave>(Base64Decode(file));
+            SceneManager.LoadScene("PacmanGame");
+        }
     }
+
+    
 }
 
 
