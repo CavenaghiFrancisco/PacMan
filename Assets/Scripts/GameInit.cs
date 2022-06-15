@@ -13,8 +13,16 @@ public class GameInit : MonoBehaviour
     [SerializeField] private GameObject prefabPinky;
     [SerializeField] private GameObject prefabBlinky;
     [SerializeField] private GameObject prefabClyde;
-    private MapSave mapSave = LevelLoader.Instance.mapSave;
+    private Camera cam;
+    private MapSave mapSave = LevelLoaderData.Instance.mapSave;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        cam = Camera.main;
+    }
+
+
     void Start()
     {
         for (int i = 0; i < mapSave.mapSizeZ; i++)
@@ -38,12 +46,18 @@ public class GameInit : MonoBehaviour
         }
         foreach (Vector3 player in mapSave.playerPositions)
         {
-            Instantiate(prefabPlayer, player + new Vector3(0, 0.1f, 0), Quaternion.identity);
+            var pacman = Instantiate(prefabPlayer, player + new Vector3(0, 0.1f, 0), Quaternion.identity);
+            pacman.AddComponent<PacmanBehavior>();
         }
-        Instantiate(prefabBlinky, mapSave.blinkyPosition, Quaternion.identity);
-        Instantiate(prefabInky, mapSave.pinkyPosition, Quaternion.identity);
-        Instantiate(prefabPinky, mapSave.inkyPosition, Quaternion.identity);
-        Instantiate(prefabClyde, mapSave.clydePosition, Quaternion.identity);
+        if(mapSave.blinkyPosition != Vector3.zero)
+            Instantiate(prefabBlinky, mapSave.blinkyPosition, Quaternion.identity);
+        if (mapSave.inkyPosition != Vector3.zero)
+            Instantiate(prefabInky, mapSave.pinkyPosition, Quaternion.identity);
+        if (mapSave.pinkyPosition != Vector3.zero)
+            Instantiate(prefabPinky, mapSave.inkyPosition, Quaternion.identity);
+        if (mapSave.clydePosition != Vector3.zero)
+            Instantiate(prefabClyde, mapSave.clydePosition, Quaternion.identity);
+        cam.transform.position = new Vector3(mapSave.mapSizeX % 2 == 0 ? mapSave.mapSizeX / 2 - 0.5f : mapSave.mapSizeX / 2, mapSave.mapSizeZ > mapSave.mapSizeX ? mapSave.mapSizeZ + 1 : mapSave.mapSizeX + 1, mapSave.mapSizeZ % 2 == 0 ? mapSave.mapSizeZ / 2 - 0.5f : mapSave.mapSizeZ / 2);
     }
 
     // Update is called once per frame

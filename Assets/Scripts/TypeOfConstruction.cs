@@ -12,5 +12,6 @@ public enum TypeOfConstruction
     BLINKY,
     INKY,
     PINKY,
-    CLYDE
+    CLYDE,
+    NULL,
 }

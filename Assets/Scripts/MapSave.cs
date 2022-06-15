@@ -14,4 +14,7 @@ public class MapSave
     public Vector3 inkyPosition;
     public Vector3 pinkyPosition;
     public Vector3 clydePosition;
+    public List<int> tilePositionX = new List<int>();
+    public List<int> tilePositionZ = new List<int>();
+    public List<int> tileType = new List<int>();
 }

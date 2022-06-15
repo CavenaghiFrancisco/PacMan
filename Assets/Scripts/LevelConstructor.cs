@@ -66,7 +66,9 @@ public class LevelConstructor : MonoBehaviour
     [SerializeField] private Button levelCreatorBttn;
     [SerializeField] private GameObject creatorPanel;
     [SerializeField] private GameObject editorPanel;
-
+    private List<int> tilePositionXInMap = new List<int>();
+    private List<int> tilePositionZInMap = new List<int>();
+    private List<int> tileTypeInMap = new List<int>();
 
 
     public void ChangeTypeOfConstruction(int value)
@@ -172,8 +174,15 @@ public class LevelConstructor : MonoBehaviour
         blinkySpawned = false;
         inkySpawned = false;
         clydeSpawned = false;
+        tilePositionXInMap.Clear();
+        tilePositionZInMap.Clear();
+        tileTypeInMap.Clear();
         foreach (Tile tile in tiles)
         {
+            
+            tilePositionXInMap.Add(tile.PosX);
+            tilePositionZInMap.Add(tile.PosZ);
+            tileTypeInMap.Add((int)tile.Type);
             switch (tile.Type)
             {
                 case TypeOfConstruction.WALL:
@@ -409,6 +418,9 @@ public class LevelConstructor : MonoBehaviour
             pinkyPosition = pinkyPositionInMap,
             clydePosition = clydePositionInMap,
             pillPositions = pills,
+            tilePositionX = tilePositionXInMap,
+            tilePositionZ = tilePositionZInMap,
+            tileType = tileTypeInMap
         };
         mapJson = JsonUtility.ToJson(mapSave,true);
         mapName = inputField.text;
@@ -449,7 +461,8 @@ public class LevelConstructor : MonoBehaviour
         if (File.Exists(pathToBeLoaded))
         {
             string file = File.ReadAllText(pathToBeLoaded);
-            LevelLoader.Instance.mapSave = JsonUtility.FromJson<MapSave>(Base64Decode(file));
+            Debug.Log(Base64Decode(file));
+            LevelLoaderData.Instance.mapSave = JsonUtility.FromJson<MapSave>(Base64Decode(file));
             SceneManager.LoadScene("PacmanGame");
         }
     }

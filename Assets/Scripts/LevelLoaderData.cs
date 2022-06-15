@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoaderData : MonoBehaviour
 {
-    public static LevelLoader Instance;
+    public static LevelLoaderData Instance;
     public MapSave mapSave;
 
     private void Awake()

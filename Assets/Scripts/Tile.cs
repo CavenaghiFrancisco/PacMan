@@ -108,4 +108,8 @@ public class Tile : MonoBehaviour
             type = TypeOfConstruction.EMPTY;
         }
     }
+
+
+
+    
 }
