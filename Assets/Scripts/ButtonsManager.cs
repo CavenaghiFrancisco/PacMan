@@ -28,7 +28,7 @@ public class ButtonsManager : MonoBehaviour
     {
         saveBttn.interactable = false;
         LevelConstructor.OnPlayerFound += DisableButton;
-        LevelConstructor.OnPlayerFound += EnableSaveBttn;
+        LevelConstructor.OnPlayableMap += EnableSaveBttn;
         LevelConstructor.OnBlinkyFound += DisableButton;
         LevelConstructor.OnInkyFound += DisableButton;
         LevelConstructor.OnClydeFound += DisableButton;
@@ -105,7 +105,7 @@ public class ButtonsManager : MonoBehaviour
        OnBothMirrorEnable?.Invoke();
     }
 
-    private void EnableSaveBttn(TypeOfConstruction type)
+    private void EnableSaveBttn()
     {
         saveBttn.interactable = true;
     }

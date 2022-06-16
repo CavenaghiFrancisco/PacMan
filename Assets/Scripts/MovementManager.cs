@@ -7,9 +7,9 @@ public class MovementManager : MonoBehaviour
 {
     private MapSave mapSave;
     private static TileJson[,] tilesMap;
-    [SerializeField] private Vector3 pacmanPosition;
-    public static Action OnMoveUp;
-    public static Action OnMoveDown;
+    [SerializeField] private PacmanBehavior player;
+    
+
 
     private void Start()
     {
@@ -27,24 +27,54 @@ public class MovementManager : MonoBehaviour
                 tileJsonAux.type = (TypeOfConstruction)mapSave.tileType[i * mapSave.mapSizeZ + j];
                 tilesMap[i, j] = tileJsonAux;
             }
-        }
-        foreach(TileJson tile in tilesMap)
-        {
-            if(tile.type == TypeOfConstruction.PLAYER)
-            pacmanPosition = new Vector3(tile.posX, transform.position.y, tile.posZ);
-        }
-        
+        }        
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (!player)
         {
-            OnMoveUp();
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PacmanBehavior>();
+            foreach (TileJson tile in tilesMap)
+            {
+                if (tile.type == TypeOfConstruction.PLAYER)
+                    player.InitPosition = new Vector3(tile.posX, 0.1f, tile.posZ);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetButtonDown("Up"))
         {
-            OnMoveDown();
+            AddKeyMoveToPlayer(player.UpLetter);
+        }
+        else if (Input.GetButtonDown("Down"))
+        {
+            AddKeyMoveToPlayer(player.DownLetter);
+        }
+        else if (Input.GetButtonDown("Right"))
+        {
+            AddKeyMoveToPlayer(player.RightLetter);
+        }
+        else if (Input.GetButtonDown("Left"))
+        {
+            AddKeyMoveToPlayer(player.LeftLetter);
+        }
+
+    }
+
+    private void AddKeyMoveToPlayer(KeyCode key)
+    {
+        if (player.Keys.Count < player.MaxKeys)
+        {
+            if (player.Keys.Count > 0)
+            {
+                if (player.Keys[0] != key)
+                {
+                    player.Keys.Add(key);
+                }
+            }
+            else
+            {
+                player.Keys.Add(key);
+            }
         }
     }
 

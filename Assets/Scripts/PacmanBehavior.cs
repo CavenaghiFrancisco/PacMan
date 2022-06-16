@@ -6,49 +6,173 @@ public class PacmanBehavior : MonoBehaviour
 {
     private float time = 0;
     private bool changingDirection = false;
+    private List<KeyCode> keys = new List<KeyCode>();
+    private int maxKeys = 2;
+    private const KeyCode upLetter = KeyCode.W;
+    private const KeyCode downLetter = KeyCode.S;
+    private const KeyCode leftLetter = KeyCode.A;
+    private const KeyCode rightLetter = KeyCode.D;
+    private bool canMove = false;
+    private Vector3 initPosition;
 
-    private void Start()
+    public KeyCode UpLetter
     {
-        MovementManager.OnMoveUp += MoveUp;
-        MovementManager.OnMoveDown += MoveDown;
+        get { return upLetter; }
     }
 
-    private void MoveUp()
+    public KeyCode DownLetter
     {
-        time = 0;
-        StartCoroutine(MoveLerp(transform.position,Vector3.forward));
+        get { return downLetter; }
     }
 
-    private void MoveDown()
+    public KeyCode RightLetter
     {
-        time = 0;
-        StartCoroutine(MoveLerp(transform.position, -Vector3.forward));
+        get { return rightLetter; }
     }
 
-    private IEnumerator MoveLerp(Vector3 initPosition, Vector3 movingVector)
+    public KeyCode LeftLetter
     {
-        while(time < 1)
+        get { return leftLetter; }
+    }
+
+    public int MaxKeys
+    {
+        get { return maxKeys; }
+        set { maxKeys = value; }
+    }
+
+    public List<KeyCode> Keys
+    {
+        get { return keys; }
+    }
+
+    public Vector3 InitPosition
+    {
+        get { return initPosition; }
+        set { initPosition = value; }
+    }
+
+
+    private void Update()
+    {
+        if (keys.Count > 0)
         {
-            transform.position = Vector3.Lerp(initPosition, initPosition + new Vector3(0, 0, 1), time += Time.deltaTime * 4);
-            if (time > 1)
+            switch (keys[0])
             {
-                time = 1;
-                if (changingDirection)
-                {
-                    changingDirection = false;
-                    yield break;
-                }
-                initPosition = transform.position;
-                if (MovementManager.GetTileTypeByPosition((int)transform.position.x, (int)transform.position.z + 1) != TypeOfConstruction.WALL)
-                {
-                    time = 0;
-                    yield return null;
-                }
-                else
-                    yield break;
+                case upLetter:
+                    MoveLerp(initPosition, Vector3.forward);
+                    break;
+                case downLetter:
+                    MoveLerp(initPosition, Vector3.back);
+                    break;
+                case rightLetter:
+                    MoveLerp(initPosition, Vector3.right);
+                    break;
+                case leftLetter:
+                    MoveLerp(initPosition, Vector3.left);
+                    break;
             }
-            yield return null;
-            
         }
+        if(keys.Count == maxKeys)
+        {
+            changingDirection = true;
+        }
+       
+    }
+
+
+
+    private void MoveLerp(Vector3 initPos, Vector3 movingVector)
+    {
+        if (MovementManager.GetTileTypeByPosition((int)(transform.position.x + movingVector.x), (int)(transform.position.z + movingVector.z)) != TypeOfConstruction.WALL && time == 0)
+        {
+            canMove = true;
+        }
+        if (canMove)
+        {
+            if (time <= 1)
+            {
+                transform.position = Vector3.Lerp(initPos, initPos + movingVector, time += Time.deltaTime * 5);
+                if (time >= 1)
+                {
+                    time = 1;
+                    if (changingDirection)
+                    {
+                        MakeChangeDirection();
+                    }
+                    initPosition = transform.position;
+                    if (MovementManager.GetTileTypeByPosition((int)(transform.position.x + movingVector.x), (int)(transform.position.z + movingVector.z)) != TypeOfConstruction.WALL)
+                    {
+                        time = 0;
+                    }
+                    else
+                    {
+                        canMove = false;
+                    }
+                    time = 0;
+                }
+            }
+        }
+
+        if (changingDirection && time == 0)
+        {
+            MakeChangeDirection();
+        }
+
+    }
+
+    private void MakeChangeDirection()
+    {
+        if (keys.Count == 2)
+        {
+            bool canChange = false;
+            KeyCode lastKey = keys[0];
+        
+            switch (keys[1])
+            {
+                case upLetter:
+                    if (MovementManager.GetTileTypeByPosition((int)(transform.position.x), (int)(transform.position.z + Vector3.forward.z)) != TypeOfConstruction.WALL)
+                    {
+                        canChange = true;
+                    }
+                    break;
+                case downLetter:
+                    if (MovementManager.GetTileTypeByPosition((int)(transform.position.x), (int)(transform.position.z - Vector3.forward.z)) != TypeOfConstruction.WALL)
+                    {
+                        canChange = true;
+                    }
+                    break;
+                case rightLetter:
+                    if (MovementManager.GetTileTypeByPosition((int)(transform.position.x + Vector3.right.x), (int)(transform.position.z)) != TypeOfConstruction.WALL)
+                    {
+                        canChange = true;
+                    }
+                    break;
+                case leftLetter:
+                    if (MovementManager.GetTileTypeByPosition((int)(transform.position.x - Vector3.right.x), (int)(transform.position.z)) != TypeOfConstruction.WALL)
+                    {
+                        canChange = true;
+                    }
+                    break;
+            }
+            if (canChange)
+            {
+                CheckChangeDirection();
+            }
+            else
+            {
+                canChange = false;
+                keys.Remove(keys[1]);
+            }
+        }
+    }
+
+    private void CheckChangeDirection()
+    {
+        changingDirection = false;
+        keys[0] = keys[1];
+        keys.Remove(keys[1]);
+        canMove = false;
+        time = 0;
     }
 }

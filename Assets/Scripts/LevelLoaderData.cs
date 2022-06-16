@@ -7,6 +7,7 @@ public class LevelLoaderData : MonoBehaviour
     public static LevelLoaderData Instance;
     public MapSave mapSave;
 
+
     private void Awake()
     {
         if (Instance != null)

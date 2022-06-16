@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 5785744691506001288}
   m_Layer: 0
   m_Name: pacman_waka_anim
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

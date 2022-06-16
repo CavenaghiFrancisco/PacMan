@@ -37,6 +37,7 @@ public class LevelConstructor : MonoBehaviour
     static public Action<int, int> OnEmpty;
     static public Action OnClear;
     static public Action OnSaveMap;
+    static public Action OnPlayableMap;
     static public Action<TypeOfConstruction> OnPlayerFound;
     static public Action<TypeOfConstruction> OnInkyFound;
     static public Action<TypeOfConstruction> OnBlinkyFound;
@@ -220,6 +221,10 @@ public class LevelConstructor : MonoBehaviour
                     points.Add(new Vector3((int)tile.transform.position.x, (int)tile.transform.position.y, (int)tile.transform.position.z));
                     break;
             }
+        }
+        if(points.Count>0 && players.Count > 0)
+        {
+            OnPlayableMap();
         }
     }
 
