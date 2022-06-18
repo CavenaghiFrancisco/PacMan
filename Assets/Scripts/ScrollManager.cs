@@ -47,6 +47,7 @@ public class ScrollManager : MonoBehaviour
             {
                 loadButton.interactable = true;
                 loadButton.image.color = Color.white;
+                break;
             }
             else
             {

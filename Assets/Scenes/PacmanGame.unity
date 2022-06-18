@@ -273,7 +273,7 @@ MonoBehaviour:
   prefabPlayer: {fileID: 6668267496686504425, guid: e7014f79401d24e468551c588683509a, type: 3}
   prefabInky: {fileID: 7145731478309367602, guid: 09a700dc418fd84408c57947c52e72bf, type: 3}
   prefabPinky: {fileID: 7145731478309367602, guid: 388898b5c6dd4964caedd296036e8239, type: 3}
-  prefabBlinky: {fileID: 7145731478309367602, guid: 5c59b08d2a1ea70439dff61887bfb116, type: 3}
+  prefabBlinky: {fileID: 7145731478309367602, guid: 5a629ecec44e1414aa4e5afedd371e40, type: 3}
   prefabClyde: {fileID: 7145731478309367602, guid: c49bc4663d3b4fb44ad69f0685bacd40, type: 3}
 --- !u!4 &286275952
 Transform:
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd89334f389c11a4ea7578ea3902d669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pacmanPosition: {x: 0, y: 0, z: 0}
+  player: {fileID: 0}
 --- !u!4 &1019515046
 Transform:
   m_ObjectHideFlags: 0

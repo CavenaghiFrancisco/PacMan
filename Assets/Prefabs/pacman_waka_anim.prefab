@@ -281,6 +281,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6323512759018853203}
   - component: {fileID: 5785744691506001288}
+  - component: {fileID: 4304212278048806937}
   m_Layer: 0
   m_Name: pacman_waka_anim
   m_TagString: Player
@@ -323,6 +324,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!64 &4304212278048806937
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6668267496686504425}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1560041534489338658, guid: ce0a8904d0af3264f9923bd2935466cf, type: 3}
 --- !u!1 &6875499647939816626
 GameObject:
   m_ObjectHideFlags: 0
