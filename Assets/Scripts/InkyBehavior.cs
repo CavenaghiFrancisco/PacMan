@@ -24,8 +24,8 @@ public class InkyBehavior : GhostBehavior
 
     void Start()
     {
-        inkyData.initPosition = transform.position;
-        actualPosition = transform.position;
+        inkyData.initPosition = LevelLoaderData.Instance.mapSave.inkyPosition;
+        actualPosition = LevelLoaderData.Instance.mapSave.inkyPosition;
         inkyData.actualPosition = actualPosition;
         GameManager.OnActivatedPill += BecomeAfraid;
     }

@@ -23,8 +23,8 @@ public class PinkyBehavior : GhostBehavior
 
     void Start()
     {
-        pinkyData.initPosition = transform.position;
-        actualPosition = transform.position;
+        pinkyData.initPosition = LevelLoaderData.Instance.mapSave.pinkyPosition;
+        actualPosition = LevelLoaderData.Instance.mapSave.pinkyPosition;
         pinkyData.actualPosition = actualPosition;
         GameManager.OnActivatedPill += BecomeAfraid;
     }

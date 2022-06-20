@@ -23,8 +23,8 @@ public class BlinkyBehavior : GhostBehavior
 
     void Start()
     {
-        blinkyData.initPosition = transform.position;
-        actualPosition = transform.position;
+        blinkyData.initPosition = LevelLoaderData.Instance.mapSave.blinkyPosition;
+        actualPosition = LevelLoaderData.Instance.mapSave.blinkyPosition;
         blinkyData.actualPosition = actualPosition;
         GameManager.OnActivatedPill += BecomeAfraid;
     }

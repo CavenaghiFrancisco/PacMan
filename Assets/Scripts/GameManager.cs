@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
         pinky = GameObject.FindObjectOfType<PinkyBehavior>();
         clyde = GameObject.FindObjectOfType<ClydeBehavior>();
         if (blinky)
-            blinkyAnim = blinky.gameObject.GetComponent<Animator>();
             blinky.BlinkyData.actualMode = GhostModes.RETURNING_HOME;
         if (inky)
             inky.InkyData.actualMode = GhostModes.RETURNING_HOME;
@@ -250,54 +249,78 @@ public class GameManager : MonoBehaviour
         {
             actualMode = GhostModes.CHASE;
         }
-        if(blinky.BlinkyData.actualMode != GhostModes.AFRAID && blinky.BlinkyData.actualMode != GhostModes.RETURNING_HOME)
+        if (blinky)
         {
-            blinky.BlinkyData.actualMode = actualMode;
+            if (blinky.BlinkyData.actualMode != GhostModes.AFRAID && blinky.BlinkyData.actualMode != GhostModes.RETURNING_HOME)
+            {
+                blinky.BlinkyData.actualMode = actualMode;
+            }
+            if (blinky.BlinkyData.actualMode != GhostModes.AFRAID)
+            {
+                blinky.Body.SetActive(true);
+                blinky.AfraidBody.SetActive(false);
+            }
         }
-        if (clyde.ClydeData.actualMode != GhostModes.AFRAID && clyde.ClydeData.actualMode != GhostModes.RETURNING_HOME)
+        if (clyde)
         {
-            clyde.ClydeData.actualMode = actualMode;
+            if (clyde.ClydeData.actualMode != GhostModes.AFRAID && clyde.ClydeData.actualMode != GhostModes.RETURNING_HOME)
+            {
+                clyde.ClydeData.actualMode = actualMode;
+            }
+            if (clyde.ClydeData.actualMode != GhostModes.AFRAID)
+            {
+                clyde.Body.SetActive(true);
+                clyde.AfraidBody.SetActive(false);
+            }
         }
-        if (inky.InkyData.actualMode != GhostModes.AFRAID && inky.InkyData.actualMode != GhostModes.RETURNING_HOME)
+        if (inky)
         {
-            inky.InkyData.actualMode = actualMode;
+            if (inky.InkyData.actualMode != GhostModes.AFRAID && inky.InkyData.actualMode != GhostModes.RETURNING_HOME)
+            {
+                inky.InkyData.actualMode = actualMode;
+            }
+            if (inky.InkyData.actualMode != GhostModes.AFRAID)
+            {
+                inky.Body.SetActive(true);
+                inky.AfraidBody.SetActive(false);
+            }
         }
-        if (pinky.PinkyData.actualMode != GhostModes.AFRAID && pinky.PinkyData.actualMode != GhostModes.RETURNING_HOME)
+        if (pinky)
         {
-            pinky.PinkyData.actualMode = actualMode;
-        }
-        if (blinky.BlinkyData.actualMode != GhostModes.AFRAID)
-        {
-            blinky.Body.SetActive(true);
-            blinky.AfraidBody.SetActive(false);
-        }
-        if (clyde.ClydeData.actualMode != GhostModes.AFRAID)
-        {
-            clyde.Body.SetActive(true);
-            clyde.AfraidBody.SetActive(false);
-        }
-        if (inky.InkyData.actualMode != GhostModes.AFRAID)
-        {
-            inky.Body.SetActive(true);
-            inky.AfraidBody.SetActive(false);
-        }
-        if (pinky.PinkyData.actualMode != GhostModes.AFRAID)
-        {
-            pinky.Body.SetActive(true);
-            pinky.AfraidBody.SetActive(false);
+            if (pinky.PinkyData.actualMode != GhostModes.AFRAID && pinky.PinkyData.actualMode != GhostModes.RETURNING_HOME)
+            {
+                pinky.PinkyData.actualMode = actualMode;
+            }
+            if (pinky.PinkyData.actualMode != GhostModes.AFRAID)
+            {
+                pinky.Body.SetActive(true);
+                pinky.AfraidBody.SetActive(false);
+            }
         }
     }
 
     private void CheckAfraidState()
     {
-        if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
-            pinky.AfraidBody.SetActive(true);
-        if (inky.InkyData.actualMode == GhostModes.AFRAID)
-            inky.AfraidBody.SetActive(true);
-        if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
-            clyde.AfraidBody.SetActive(true);
-        if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
-            blinky.AfraidBody.SetActive(true);
+        if (pinky)
+        {
+            if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
+                pinky.AfraidBody.SetActive(true);
+        }
+        if (inky)
+        {
+            if (inky.InkyData.actualMode == GhostModes.AFRAID)
+                inky.AfraidBody.SetActive(true);
+        }
+        if (clyde)
+        {
+            if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
+                clyde.AfraidBody.SetActive(true);
+        }
+        if (blinky)
+        {
+            if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
+                blinky.AfraidBody.SetActive(true);
+        }      
         if (ghostsAreAfraid)
         {
             afraidTimer = 0;
@@ -313,31 +336,43 @@ public class GameManager : MonoBehaviour
             ChangeBodyBasedOnTime(5, true);
         }
         if (afraidTimer > 6)
-        {               
-            if (pinky.PinkyData.actualMode != GhostModes.RETURNING_HOME)
+        {
+            if (pinky)
             {
-                pinky.PinkyData.actualMode = actualMode;
-                pinky.Body.SetActive(true);
-                pinky.AfraidBody.SetActive(false);
-            }                
-            if (inky.InkyData.actualMode != GhostModes.RETURNING_HOME)
+                if (pinky.PinkyData.actualMode != GhostModes.RETURNING_HOME)
+                {
+                    pinky.PinkyData.actualMode = actualMode;
+                    pinky.Body.SetActive(true);
+                    pinky.AfraidBody.SetActive(false);
+                }
+            }
+            if (inky)
             {
-                inky.InkyData.actualMode = actualMode;
-                inky.Body.SetActive(true);
-                inky.AfraidBody.SetActive(false);
-            }    
-            if (clyde.ClydeData.actualMode != GhostModes.RETURNING_HOME)
+                if (inky.InkyData.actualMode != GhostModes.RETURNING_HOME)
+                {
+                    inky.InkyData.actualMode = actualMode;
+                    inky.Body.SetActive(true);
+                    inky.AfraidBody.SetActive(false);
+                }
+            }
+            if (clyde)
             {
-                clyde.ClydeData.actualMode = actualMode;
-                clyde.Body.SetActive(true);
-                clyde.AfraidBody.SetActive(false);
-            } 
-            if (blinky.BlinkyData.actualMode != GhostModes.RETURNING_HOME)
+                if (clyde.ClydeData.actualMode != GhostModes.RETURNING_HOME)
+                {
+                    clyde.ClydeData.actualMode = actualMode;
+                    clyde.Body.SetActive(true);
+                    clyde.AfraidBody.SetActive(false);
+                }
+            }
+            if (blinky)
             {
-                blinky.BlinkyData.actualMode = actualMode;
-                blinky.Body.SetActive(true);
-                blinky.AfraidBody.SetActive(false);
-            }    
+                if (blinky.BlinkyData.actualMode != GhostModes.RETURNING_HOME)
+                {
+                    blinky.BlinkyData.actualMode = actualMode;
+                    blinky.Body.SetActive(true);
+                    blinky.AfraidBody.SetActive(false);
+                }
+            }
         }
     }
 
@@ -345,49 +380,57 @@ public class GameManager : MonoBehaviour
     {
         if (afraidTimer > time && afraidTimer < time + 0.5f)
         {
-            if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
-            {
-                pinky.Body.SetActive(normalBody);
-                pinky.AfraidBody.SetActive(!normalBody);
-            }                
-            if (inky.InkyData.actualMode == GhostModes.AFRAID)
-            {
-                inky.Body.SetActive(normalBody);
-                inky.AfraidBody.SetActive(!normalBody);
-            }                
-            if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
-            {
-                clyde.Body.SetActive(normalBody);
-                clyde.AfraidBody.SetActive(!normalBody);
-            }                
-            if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
-            {
-                blinky.Body.SetActive(normalBody);
-                blinky.AfraidBody.SetActive(!normalBody);
-            } 
+            if(pinky)
+                if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
+                {
+                    pinky.Body.SetActive(normalBody);
+                    pinky.AfraidBody.SetActive(!normalBody);
+                }
+            if (inky)
+                if (inky.InkyData.actualMode == GhostModes.AFRAID)
+                {
+                    inky.Body.SetActive(normalBody);
+                    inky.AfraidBody.SetActive(!normalBody);
+                }
+            if (clyde)
+                if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
+                {
+                    clyde.Body.SetActive(normalBody);
+                    clyde.AfraidBody.SetActive(!normalBody);
+                }  
+            if(blinky)
+                if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
+                {
+                    blinky.Body.SetActive(normalBody);
+                    blinky.AfraidBody.SetActive(!normalBody);
+                } 
         }
         if (afraidTimer > time+0.5 && afraidTimer < time + 1f)
         {
-            if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
-            {
-                pinky.Body.SetActive(!normalBody);
-                pinky.AfraidBody.SetActive(normalBody);
-            }
-            if (inky.InkyData.actualMode == GhostModes.AFRAID)
-            {
-                inky.Body.SetActive(!normalBody);
-                inky.AfraidBody.SetActive(normalBody);
-            }
-            if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
-            {
-                clyde.Body.SetActive(!normalBody);
-                clyde.AfraidBody.SetActive(normalBody);
-            }
-            if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
-            {
-                blinky.Body.SetActive(!normalBody);
-                blinky.AfraidBody.SetActive(normalBody);
-            }
+            if(pinky)
+                if (pinky.PinkyData.actualMode == GhostModes.AFRAID)
+                {
+                    pinky.Body.SetActive(!normalBody);
+                    pinky.AfraidBody.SetActive(normalBody);
+                }
+            if(inky)
+                if (inky.InkyData.actualMode == GhostModes.AFRAID)
+                {
+                    inky.Body.SetActive(!normalBody);
+                    inky.AfraidBody.SetActive(normalBody);
+                }
+            if(clyde)
+                if (clyde.ClydeData.actualMode == GhostModes.AFRAID)
+                {
+                    clyde.Body.SetActive(!normalBody);
+                    clyde.AfraidBody.SetActive(normalBody);
+                }
+            if(blinky)
+                if (blinky.BlinkyData.actualMode == GhostModes.AFRAID)
+                {
+                    blinky.Body.SetActive(!normalBody);
+                    blinky.AfraidBody.SetActive(normalBody);
+                }
         }
     }
 }

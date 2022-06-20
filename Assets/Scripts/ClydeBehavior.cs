@@ -23,8 +23,8 @@ public class ClydeBehavior : GhostBehavior
 
     void Start()
     {
-        clydeData.initPosition = transform.position;
-        actualPosition = transform.position;
+        clydeData.initPosition = LevelLoaderData.Instance.mapSave.clydePosition;
+        actualPosition = LevelLoaderData.Instance.mapSave.clydePosition;
         clydeData.actualPosition = actualPosition;
         GameManager.OnActivatedPill += BecomeAfraid;
     }
