@@ -63,6 +63,13 @@ public class Tile : MonoBehaviour
         constructed = false;
     }
 
+    private void OnDestroy()
+    {
+        LevelConstructor.OnNormalConstruct -= AssignConstruction;
+        LevelConstructor.OnEmpty -= EmptyTile;
+        LevelConstructor.OnClear -= Clear;
+    }
+
     private void AssignConstruction(GameObject construction, int x, int z, TypeOfConstruction type)
     {
         if(posX == x && posZ == z && !this.obligatoryWall)

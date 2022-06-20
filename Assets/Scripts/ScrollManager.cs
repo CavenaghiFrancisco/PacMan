@@ -37,6 +37,12 @@ public class ScrollManager : MonoBehaviour
         LevelButton.OnGetLevel += SelectLevel;
     }
 
+    private void OnDestroy()
+    {
+        LevelConstructor.OnSaveMap -= ShowLevels;
+        LevelButton.OnGetLevel -= SelectLevel;
+    }
+
     private void Update()
     {
         loadButton.interactable = false;

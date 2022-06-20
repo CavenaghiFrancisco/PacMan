@@ -62,8 +62,8 @@ public class LevelConstructor : MonoBehaviour
     [SerializeField] private TMPro.TMP_InputField horizontalSize;
     private int horizontalSizeMinLimit = 15;
     private int verticalSizeMinLimit = 15;
-    private int horizontalSizeMaxLimit =30;
-    private int verticalSizeMaxLimit = 30;
+    private int horizontalSizeMaxLimit =31;
+    private int verticalSizeMaxLimit = 31;
     [SerializeField] private Button levelCreatorBttn;
     [SerializeField] private GameObject creatorPanel;
     [SerializeField] private GameObject editorPanel;
@@ -87,6 +87,16 @@ public class LevelConstructor : MonoBehaviour
         ButtonsManager.OnSave += SaveMap;
         ScrollManager.OnLoadingLevel += LoadMap;
         levelCreatorBttn.interactable = false;
+    }
+
+    private void OnDestroy()
+    {
+        ButtonsManager.OnHorizontalMirrorEnable -= SetHorizontalMirror;
+        ButtonsManager.OnVerticalMirrorEnable -= SetVerticalMirror;
+        ButtonsManager.OnMirrorDisable -= SetNoneMirror;
+        ButtonsManager.OnBothMirrorEnable -= SetBothMirror;
+        ButtonsManager.OnSave -= SaveMap;
+        ScrollManager.OnLoadingLevel -= LoadMap;
     }
 
     public void CheckMapSize()

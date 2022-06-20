@@ -40,6 +40,18 @@ public class ButtonsManager : MonoBehaviour
         OnMirrorDisable?.Invoke();
     }
 
+    private void OnDestroy()
+    {
+        LevelConstructor.OnPlayerFound -= DisableButton;
+        LevelConstructor.OnPlayableMap -= EnableSaveBttn;
+        LevelConstructor.OnBlinkyFound -= DisableButton;
+        LevelConstructor.OnInkyFound -= DisableButton;
+        LevelConstructor.OnClydeFound -= DisableButton;
+        LevelConstructor.OnPinkyFound -= DisableButton;
+        Tile.OnPlayerButtonEnable -= EnableButton;
+        Tile.OnPlayerButtonEnable -= DisableSaveBttn;
+    }
+
     private void Update()
     {
         if(!verticalMirror.Selected && !horizontalMirror.Selected && !bothMirror.Selected)

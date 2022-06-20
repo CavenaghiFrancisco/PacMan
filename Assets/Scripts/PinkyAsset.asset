@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73c20e3a42e93fb49b7715a5debfa801, type: 3}
   m_Name: PinkyAsset
   m_EditorClassIdentifier: 
-  alive: 1
   speed: 2
-  actualMode: 1
-  initPosition: {x: 0, y: 0, z: 0}
+  actualMode: 2
+  initPosition: {x: 14, y: 0, z: 22}
   destinyPosition: {x: 0, y: 0, z: 0}
+  actualPosition: {x: 14, y: 0, z: 22}

@@ -8,4 +8,5 @@ public enum GhostModes
     SCATTER,
     AFRAID,
     RETURNING_HOME,
+    RETURNING_TO_NORMAL,
 }

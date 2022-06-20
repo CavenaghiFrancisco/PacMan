@@ -1,32 +1,96 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] GameObject image;
-    private PhotonView view;
+    private int points = 0;
+    private int lifes = 3;
+    [SerializeField] private TMPro.TextMeshProUGUI pointsText;
+    [SerializeField] private TMPro.TextMeshProUGUI pauseBttnText;
+    [SerializeField] private List<GameObject> lifesON;
+    [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject losePanel;
 
     private void Start()
     {
-        view = GetComponent<PhotonView>();
+        GameManager.OnAddedPoints += AddPoints;
+        GameManager.OnLifeLose += LoseLife;
+        GameManager.OnWin += ShowWin;
+        GameManager.OnLose += ShowLose;
     }
 
     private void Update()
     {
-        if (view.IsMine)
+        pointsText.text = points.ToString();
+        pauseBttnText.text = Time.timeScale == 1 ? "PAUSE" : "RESUME";
+        switch (lifes)
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                view.RPC("DissapearRPC", RpcTarget.All);
-            }
+            case 3:
+                lifesON[0].SetActive(true);
+                lifesON[1].SetActive(true);
+                lifesON[2].SetActive(true);
+                break;
+            case 2:
+                lifesON[0].SetActive(true);
+                lifesON[1].SetActive(true);
+                lifesON[2].SetActive(false);
+                break;
+            case 1:
+                lifesON[0].SetActive(true);
+                lifesON[1].SetActive(false);
+                lifesON[2].SetActive(false);
+                break;
+            case 0:
+                lifesON[0].SetActive(false);
+                lifesON[1].SetActive(false);
+                lifesON[2].SetActive(false);
+                break;
+            default:
+                break;
         }
     }
 
-    [PunRPC]
-    private void DissapearRPC()
+    public void ChangeScene(string scene)
     {
-        image.SetActive(false);
+        SceneManager.LoadScene(scene);
+    }
+
+    public void TooglePause()
+    {
+        if(Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+    }
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void AddPoints(int point)
+    {
+        points += point;
+    }
+
+    private void LoseLife(int lifesLeft)
+    {
+        lifes = lifesLeft;
+    }
+
+    private void ShowLose()
+    {
+        losePanel.SetActive(true);
+    }
+
+    private void ShowWin()
+    {
+        winPanel.SetActive(true);
     }
 }

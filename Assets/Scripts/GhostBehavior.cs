@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class GhostBehavior : MonoBehaviour
 {
+    [SerializeField] protected GameObject body;
+    [SerializeField] protected GameObject afraidBody;
+
     protected enum DIRECTION
     {
         UP,
@@ -19,6 +22,29 @@ public abstract class GhostBehavior : MonoBehaviour
 
     protected DIRECTION actualDirection = DIRECTION.NONE;
 
+    public Vector3 ActualPosition
+    {
+        get { return actualPosition; }
+        set { actualPosition = value; }
+    }
+
+    public float MoveTimer
+    {
+        get { return time; }
+        set { time = value; }
+    }
+
+    public GameObject Body
+    {
+        get { return body; }
+    }
+
+    public GameObject AfraidBody
+    {
+        get { return afraidBody; }
+    }
+
+
     protected void CheckNewDirectionByDestinyProximity(Vector3 destinyPosiiton)
     {
         Vector3 newDirectionUp = Vector3.zero;
@@ -31,7 +57,6 @@ public abstract class GhostBehavior : MonoBehaviour
         float distanceLeft = 0;
         float nearestDistance = 1000;
         DIRECTION betterWay = DIRECTION.NONE;
-        DIRECTION secondBetterWay = DIRECTION.NONE;
         switch (actualDirection)
         {
             case DIRECTION.UP:
@@ -67,7 +92,6 @@ public abstract class GhostBehavior : MonoBehaviour
             if(distanceUp < nearestDistance)
             {
                 nearestDistance = distanceUp;
-                secondBetterWay = betterWay;
                 betterWay = DIRECTION.UP;
             }
         }
@@ -77,7 +101,6 @@ public abstract class GhostBehavior : MonoBehaviour
             if (distanceDown < nearestDistance)
             {
                 nearestDistance = distanceDown;
-                secondBetterWay = betterWay;
                 betterWay = DIRECTION.DOWN;
             }
         }
@@ -87,7 +110,6 @@ public abstract class GhostBehavior : MonoBehaviour
             if (distanceRight < nearestDistance)
             {
                 nearestDistance = distanceRight;
-                secondBetterWay = betterWay;
                 betterWay = DIRECTION.RIGHT;
             }
         }
@@ -97,11 +119,10 @@ public abstract class GhostBehavior : MonoBehaviour
             if (distanceLeft < nearestDistance)
             {
                 nearestDistance = distanceLeft;
-                secondBetterWay = betterWay;
                 betterWay = DIRECTION.LEFT;
             }
         }
-        actualDirection = CheckTheFinalBetterWay(betterWay, secondBetterWay,destinyPosiiton);
+        actualDirection = betterWay;
 
     }
 
@@ -157,111 +178,6 @@ public abstract class GhostBehavior : MonoBehaviour
             }
             
         }
-    }
-
-    protected DIRECTION CheckTheFinalBetterWay(DIRECTION firstOption, DIRECTION secondOption, Vector3 destinyPosition)
-    {
-        float distanceByFirstOption = GetNextTileDistance(firstOption, destinyPosition);
-        float distanceBySecondOption = GetNextTileDistance(secondOption, destinyPosition);
-        if(distanceByFirstOption > distanceBySecondOption)
-        {
-            return secondOption;
-        }
-        else
-        {
-            return firstOption;
-        }
-    }
-
-    private float GetNextTileDistance(DIRECTION previousMove, Vector3 destinyPosition)
-    {
-        Vector3 nextPosition;
-        switch (previousMove)
-        {
-            case DIRECTION.UP:
-                nextPosition = transform.position + Vector3.forward;
-                break;
-            case DIRECTION.DOWN:
-                nextPosition = transform.position + Vector3.back;
-                break;
-            case DIRECTION.RIGHT:
-                nextPosition = transform.position + Vector3.right;
-                break;
-            case DIRECTION.LEFT:
-                nextPosition = transform.position + Vector3.left;
-                break;
-        }
-        Vector3 newDirectionUp = Vector3.zero;
-        Vector3 newDirectionDown = Vector3.zero;
-        Vector3 newDirectionRight = Vector3.zero;
-        Vector3 newDirectionLeft = Vector3.zero;
-        float distanceUp = 0;
-        float distanceDown = 0;
-        float distanceRight = 0;
-        float distanceLeft = 0;
-        float nearestDistance = 2000;
-        switch (previousMove)
-        {
-            case DIRECTION.UP:
-                newDirectionUp = transform.position + Vector3.forward;
-                newDirectionRight = transform.position + Vector3.right;
-                newDirectionLeft = transform.position + Vector3.left;
-                break;
-            case DIRECTION.DOWN:
-                newDirectionDown = transform.position + Vector3.back;
-                newDirectionRight = transform.position + Vector3.right;
-                newDirectionLeft = transform.position + Vector3.left;
-                break;
-            case DIRECTION.RIGHT:
-                newDirectionDown = transform.position + Vector3.back;
-                newDirectionUp = transform.position + Vector3.forward;
-                newDirectionRight = transform.position + Vector3.right;
-                break;
-            case DIRECTION.LEFT:
-                newDirectionDown = transform.position + Vector3.back;
-                newDirectionLeft = transform.position + Vector3.left;
-                newDirectionUp = transform.position + Vector3.forward;
-                break;
-            case DIRECTION.NONE:
-                newDirectionDown = transform.position + Vector3.back;
-                newDirectionLeft = transform.position + Vector3.left;
-                newDirectionUp = transform.position + Vector3.forward;
-                newDirectionRight = transform.position + Vector3.right;
-                break;
-        }
-        if (newDirectionUp != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionUp.x, (int)newDirectionUp.z) != TypeOfConstruction.WALL)
-        {
-            distanceUp = (newDirectionUp - destinyPosition).magnitude;
-            if (distanceUp < nearestDistance)
-            {
-                nearestDistance = distanceUp;
-            }
-        }
-        if (newDirectionDown != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionDown.x, (int)newDirectionDown.z) != TypeOfConstruction.WALL)
-        {
-            distanceDown = (newDirectionDown - destinyPosition).magnitude;
-            if (distanceDown < nearestDistance)
-            {
-                nearestDistance = distanceDown;
-            }
-        }
-        if (newDirectionRight != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionRight.x, (int)newDirectionRight.z) != TypeOfConstruction.WALL)
-        {
-            distanceRight = (newDirectionRight - destinyPosition).magnitude;
-            if (distanceRight < nearestDistance)
-            {
-                nearestDistance = distanceRight;
-            }
-        }
-        if (newDirectionLeft != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionLeft.x, (int)newDirectionLeft.z) != TypeOfConstruction.WALL)
-        {
-            distanceLeft = (newDirectionLeft - destinyPosition).magnitude;
-            if (distanceLeft < nearestDistance)
-            {
-                nearestDistance = distanceLeft;
-            }
-        }
-        return nearestDistance;
     }
 
     protected void Respawn(Vector3 destinyPoint, ref float time)

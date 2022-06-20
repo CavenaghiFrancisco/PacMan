@@ -51,6 +51,11 @@ public class MovementManager : MonoBehaviour
         corners.Add("BottomLeft", tilesMap[0, 0]);
     }
 
+    private void OnDestroy()
+    {
+        corners.Clear();
+    }
+
     private void Update()
     {
         if (!player)
@@ -137,5 +142,18 @@ public class MovementManager : MonoBehaviour
     {
         return tilesMap[UnityEngine.Random.Range(0, mapSave.mapSizeZ),UnityEngine.Random.Range(0, mapSave.mapSizeX)];
     }
-    
+
+    public static TileJson GetTileAtMinimumDistance(float minimumDistance, Vector2 point)
+    {
+        foreach(TileJson tile in tilesMap)
+        {
+            float distance = Mathf.Sqrt(Mathf.Pow(tile.posX - point.x, 2) + Mathf.Pow(tile.posZ - point.y, 2));
+            if(distance > minimumDistance)
+            {
+                return tile;
+            }
+        }
+        return tilesMap[UnityEngine.Random.Range(0, mapSave.mapSizeZ), UnityEngine.Random.Range(0, mapSave.mapSizeX)];
+    }
+
 }

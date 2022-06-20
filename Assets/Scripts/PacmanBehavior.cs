@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PacmanBehavior : MonoBehaviour
 {
@@ -13,7 +14,11 @@ public class PacmanBehavior : MonoBehaviour
     private const KeyCode leftLetter = KeyCode.A;
     private const KeyCode rightLetter = KeyCode.D;
     private bool canMove = false;
+    private Vector3 position;
     private Vector3 initPosition;
+    public static Action<GameObject> OnCollisionWithPill;
+    public static Action<GameObject> OnCollisionWithGhost;
+    public static Action OnCollisionWithPoint;
 
     public KeyCode UpLetter
     {
@@ -46,12 +51,29 @@ public class PacmanBehavior : MonoBehaviour
         get { return keys; }
     }
 
+    public Vector3 Position
+    {
+        get { return position; }
+        set { position = value; }
+    }
+
     public Vector3 InitPosition
     {
         get { return initPosition; }
         set { initPosition = value; }
     }
 
+    public bool CanMove
+    {
+        get { return canMove; }
+        set { canMove = value; }
+    }
+
+    private void Start()
+    {
+        position = transform.position;
+        initPosition = transform.position;
+    }
 
     private void Update()
     {
@@ -60,16 +82,20 @@ public class PacmanBehavior : MonoBehaviour
             switch (keys[0])
             {
                 case upLetter:
-                    MoveLerp(initPosition, Vector3.forward);
+                    gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, 0, gameObject.transform.eulerAngles.z);
+                    MoveLerp(position, Vector3.forward);
                     break;
                 case downLetter:
-                    MoveLerp(initPosition, Vector3.back);
+                    gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, 180, gameObject.transform.eulerAngles.z);
+                    MoveLerp(position, Vector3.back);
                     break;
                 case rightLetter:
-                    MoveLerp(initPosition, Vector3.right);
+                    gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, 90, gameObject.transform.eulerAngles.z);
+                    MoveLerp(position, Vector3.right);
                     break;
                 case leftLetter:
-                    MoveLerp(initPosition, Vector3.left);
+                    gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, -90, gameObject.transform.eulerAngles.z);
+                    MoveLerp(position, Vector3.left);
                     break;
             }
         }
@@ -100,7 +126,7 @@ public class PacmanBehavior : MonoBehaviour
                     {
                         MakeChangeDirection();
                     }
-                    initPosition = transform.position;
+                    position = transform.position;
                     if (MovementManager.GetTileTypeByPosition((int)(transform.position.x + movingVector.x), (int)(transform.position.z + movingVector.z)) != TypeOfConstruction.WALL)
                     {
                         time = 0;
@@ -112,6 +138,10 @@ public class PacmanBehavior : MonoBehaviour
                     time = 0;
                 }
             }
+        }
+        else
+        {
+            time = 0;
         }
 
         if (changingDirection && time == 0)
@@ -174,5 +204,22 @@ public class PacmanBehavior : MonoBehaviour
         keys.Remove(keys[1]);
         canMove = false;
         time = 0;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Pill"))
+        {
+            OnCollisionWithPill(collision.gameObject);
+        }
+        else if (collision.transform.CompareTag("Point"))
+        {
+            OnCollisionWithPoint();
+            Destroy(collision.gameObject);
+        }
+        else if (collision.transform.CompareTag("Ghost"))
+        {
+            OnCollisionWithGhost(collision.gameObject);
+        }
     }
 }

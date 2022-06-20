@@ -3060,7 +3060,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Vertical Size:
 
-    (15-30)'
+    (15-31)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 086b27251e8f1cb4d9488c29acbc438d, type: 2}
   m_sharedMaterial: {fileID: 2741519328987709237, guid: 086b27251e8f1cb4d9488c29acbc438d, type: 2}
@@ -6053,7 +6053,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Horizontal Size:
 
-    (15-30)'
+    (15-31)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 086b27251e8f1cb4d9488c29acbc438d, type: 2}
   m_sharedMaterial: {fileID: 2741519328987709237, guid: 086b27251e8f1cb4d9488c29acbc438d, type: 2}
@@ -8103,7 +8103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 654f1b72fbce535409dc6bf4b6432f7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingMap: 0
 --- !u!4 &1768469929
 Transform:
   m_ObjectHideFlags: 0
