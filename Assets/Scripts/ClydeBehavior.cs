@@ -95,7 +95,12 @@ public class ClydeBehavior : GhostBehavior
     private void BecomeAfraid()
     {
         if (clydeData.actualMode != GhostModes.RETURNING_HOME)
+        {
             clydeData.actualMode = GhostModes.AFRAID;
+            body.SetActive(false);
+            afraidBody.SetActive(true);
+        }
+            
     }
 }
 

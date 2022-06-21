@@ -77,7 +77,7 @@ public class ScrollManager : MonoBehaviour
             {
                 levelsPath.Add(levels[i]);
                 levelsName[i] = levels[i].Replace(path + "\\", "");
-                levelsName[i] = levelsName[i].Replace(".dat", "");
+                levelsName[i] = levelsName[i].Replace(".txt", "");
             }
 
             if (oldSize < levels.Count && oldSize == 0)

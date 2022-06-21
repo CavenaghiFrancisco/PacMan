@@ -94,7 +94,12 @@ public class InkyBehavior : GhostBehavior
     private void BecomeAfraid()
     {
         if (inkyData.actualMode != GhostModes.RETURNING_HOME)
+        {
             inkyData.actualMode = GhostModes.AFRAID;
+            body.SetActive(false);
+            afraidBody.SetActive(true);
+        }
+            
     }
 
 }

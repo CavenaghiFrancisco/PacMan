@@ -95,6 +95,10 @@ public class PinkyBehavior : GhostBehavior
     private void BecomeAfraid()
     {
         if (pinkyData.actualMode != GhostModes.RETURNING_HOME)
+        {
             pinkyData.actualMode = GhostModes.AFRAID;
+            body.SetActive(false);
+            afraidBody.SetActive(true);
+        }  
     }
 }

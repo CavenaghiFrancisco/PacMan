@@ -70,6 +70,9 @@ public class LevelConstructor : MonoBehaviour
     private List<int> tilePositionXInMap = new List<int>();
     private List<int> tilePositionZInMap = new List<int>();
     private List<int> tileTypeInMap = new List<int>();
+    [SerializeField] private TextAsset level1;
+    [SerializeField] private TextAsset level2;
+    [SerializeField] private TextAsset level3;
 
 
     public void ChangeTypeOfConstruction(int value)
@@ -87,6 +90,14 @@ public class LevelConstructor : MonoBehaviour
         ButtonsManager.OnSave += SaveMap;
         ScrollManager.OnLoadingLevel += LoadMap;
         levelCreatorBttn.interactable = false;
+        path = Application.persistentDataPath + "/maps";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+            File.WriteAllText(path + "/Level 3.txt", level3.ToString());
+            File.WriteAllText(path + "/Level 2.txt", level2.ToString());
+            File.WriteAllText(path + "/Level 1.txt", level1.ToString());
+        }
     }
 
     private void OnDestroy()
@@ -445,7 +456,7 @@ public class LevelConstructor : MonoBehaviour
         {
             Directory.CreateDirectory(path);
         }
-        if(File.Exists(path + "/" + mapName + ".dat"))
+        if(File.Exists(path + "/" + mapName + ".txt"))
         {
             overrideBox.SetActive(true);
         }
@@ -457,7 +468,7 @@ public class LevelConstructor : MonoBehaviour
 
     public void ConfirmSave()
     {
-        File.WriteAllText(path + "/" + mapName + ".dat", mapJsonEncoded);
+        File.WriteAllText(path + "/" + mapName + ".txt", mapJsonEncoded);
         OnSaveMap();
         HideOverrideBox();
         saving = false;

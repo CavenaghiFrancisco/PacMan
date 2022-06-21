@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     float afraidTimer = 0;
     bool ghostsAreAfraid = false;
     GhostModes actualMode;
+    [SerializeField] AudioSource pacmanEat;
+    [SerializeField] AudioSource pillSound;
 
     private void Start()
     {
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
         inky = GameObject.FindObjectOfType<InkyBehavior>();
         pinky = GameObject.FindObjectOfType<PinkyBehavior>();
         clyde = GameObject.FindObjectOfType<ClydeBehavior>();
+
         if (blinky)
             blinky.BlinkyData.actualMode = GhostModes.RETURNING_HOME;
         if (inky)
@@ -68,6 +71,7 @@ public class GameManager : MonoBehaviour
     private void ActivePillEffect(GameObject pill)
     {
         points--;
+        pillSound.Play();
         ghostsAreAfraid = true;
         OnActivatedPill();
         Destroy(pill);
@@ -81,6 +85,7 @@ public class GameManager : MonoBehaviour
             {
                 blinky.BlinkyData.actualMode = GhostModes.RETURNING_HOME;
                 OnAddedPoints(200);
+                pacmanEat.Play();
             }
             else
             {
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
             {
                 inky.InkyData.actualMode = GhostModes.RETURNING_HOME;
                 OnAddedPoints(200);
+                pacmanEat.Play();
             }
             else
             {
@@ -125,6 +131,7 @@ public class GameManager : MonoBehaviour
             {
                 pinky.PinkyData.actualMode = GhostModes.RETURNING_HOME;
                 OnAddedPoints(200);
+                pacmanEat.Play();
             }
             else
             {
@@ -147,6 +154,7 @@ public class GameManager : MonoBehaviour
             {
                 clyde.ClydeData.actualMode = GhostModes.RETURNING_HOME;
                 OnAddedPoints(200);
+                pacmanEat.Play();
             }
             else
             {

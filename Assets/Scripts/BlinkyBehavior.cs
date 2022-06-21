@@ -93,6 +93,10 @@ public class BlinkyBehavior : GhostBehavior
     private void BecomeAfraid()
     {
         if(blinkyData.actualMode != GhostModes.RETURNING_HOME)
-        blinkyData.actualMode = GhostModes.AFRAID;
+        {
+            blinkyData.actualMode = GhostModes.AFRAID;
+            body.SetActive(false);
+            afraidBody.SetActive(true);
+        }
     }
 }
