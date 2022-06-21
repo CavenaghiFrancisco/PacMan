@@ -86,7 +86,7 @@ public abstract class GhostBehavior : MonoBehaviour
                 newDirectionRight = transform.position + Vector3.right;
                 break;
         }
-        if(newDirectionUp != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionUp.x,(int)newDirectionUp.z) != TypeOfConstruction.WALL)
+        if(newDirectionUp != Vector3.zero && MovementManager.GetTileTypeByPosition(Mathf.RoundToInt(newDirectionUp.x), Mathf.RoundToInt(newDirectionUp.z)) != TypeOfConstruction.WALL)
         {
             distanceUp = (newDirectionUp - destinyPosiiton).magnitude;
             if(distanceUp < nearestDistance)
@@ -95,7 +95,7 @@ public abstract class GhostBehavior : MonoBehaviour
                 betterWay = DIRECTION.UP;
             }
         }
-        if (newDirectionDown != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionDown.x, (int)newDirectionDown.z) != TypeOfConstruction.WALL)
+        if (newDirectionDown != Vector3.zero && MovementManager.GetTileTypeByPosition(Mathf.RoundToInt(newDirectionDown.x), Mathf.RoundToInt(newDirectionDown.z)) != TypeOfConstruction.WALL)
         {
             distanceDown = (newDirectionDown - destinyPosiiton).magnitude;
             if (distanceDown < nearestDistance)
@@ -104,7 +104,7 @@ public abstract class GhostBehavior : MonoBehaviour
                 betterWay = DIRECTION.DOWN;
             }
         }
-        if (newDirectionRight != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionRight.x, (int)newDirectionRight.z) != TypeOfConstruction.WALL)
+        if (newDirectionRight != Vector3.zero && MovementManager.GetTileTypeByPosition(Mathf.RoundToInt(newDirectionRight.x), Mathf.RoundToInt(newDirectionRight.z)) != TypeOfConstruction.WALL)
         {
             distanceRight = (newDirectionRight - destinyPosiiton).magnitude;
             if (distanceRight < nearestDistance)
@@ -113,7 +113,7 @@ public abstract class GhostBehavior : MonoBehaviour
                 betterWay = DIRECTION.RIGHT;
             }
         }
-        if (newDirectionLeft != Vector3.zero && MovementManager.GetTileTypeByPosition((int)newDirectionLeft.x, (int)newDirectionLeft.z) != TypeOfConstruction.WALL)
+        if (newDirectionLeft != Vector3.zero && MovementManager.GetTileTypeByPosition(Mathf.RoundToInt(newDirectionLeft.x), Mathf.RoundToInt(newDirectionLeft.z)) != TypeOfConstruction.WALL)
         {
             distanceLeft = (newDirectionLeft - destinyPosiiton).magnitude;
             if (distanceLeft < nearestDistance)

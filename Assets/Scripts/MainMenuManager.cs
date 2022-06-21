@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject optionsPanel;
+
+    private void Start()
     {
-        
+        Time.timeScale = 1;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeScene(string scene)
     {
-        
+        SceneManager.LoadScene(scene);
+    }
+
+    public void ShowOptions()
+    {
+        if (optionsPanel.activeSelf)
+        {
+            optionsPanel.SetActive(false);
+        }
+        else
+        {
+            optionsPanel.SetActive(true);
+        }
     }
 }

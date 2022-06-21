@@ -5,15 +5,21 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/Loading.unity
-    guid: 91d471d93b0513742acd48a27e3f5d35
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: 3409a287ff8686d4aaa0f2677e5e4eab
+    guid: ab7ac5ba033838c4d9f2b2e7b5cddbfe
   - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: cbc7e6e7da679f14da0a81edd1f5dc18
+    path: Assets/Scenes/LevelCreator.unity
+    guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 1
     path: Assets/Scenes/PacmanGame.unity
     guid: a37fb7ca2a33fc743914419ed65654b3
