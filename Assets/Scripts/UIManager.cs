@@ -21,35 +21,46 @@ public class UIManager : MonoBehaviour
         GameManager.OnLose += ShowLose;
     }
 
+    private void OnDestroy()
+    {
+        GameManager.OnAddedPoints -= AddPoints;
+        GameManager.OnLifeLose -= LoseLife;
+        GameManager.OnWin -= ShowWin;
+        GameManager.OnLose -= ShowLose;
+    }
+
     private void Update()
     {
-        pointsText.text = points.ToString();
-        pauseBttnText.text = Time.timeScale == 1 ? "PAUSE" : "RESUME";
-        switch (lifes)
+        if(SceneManager.GetActiveScene() == SceneManager.GetSceneByName("PacmanGame"))
         {
-            case 3:
-                lifesON[0].SetActive(true);
-                lifesON[1].SetActive(true);
-                lifesON[2].SetActive(true);
-                break;
-            case 2:
-                lifesON[0].SetActive(true);
-                lifesON[1].SetActive(true);
-                lifesON[2].SetActive(false);
-                break;
-            case 1:
-                lifesON[0].SetActive(true);
-                lifesON[1].SetActive(false);
-                lifesON[2].SetActive(false);
-                break;
-            case 0:
-                lifesON[0].SetActive(false);
-                lifesON[1].SetActive(false);
-                lifesON[2].SetActive(false);
-                break;
-            default:
-                break;
-        }
+            pointsText.text = points.ToString();
+            pauseBttnText.text = Time.timeScale == 1 ? "PAUSE" : "RESUME";
+            switch (lifes)
+            {
+                case 3:
+                    lifesON[0].SetActive(true);
+                    lifesON[1].SetActive(true);
+                    lifesON[2].SetActive(true);
+                    break;
+                case 2:
+                    lifesON[0].SetActive(true);
+                    lifesON[1].SetActive(true);
+                    lifesON[2].SetActive(false);
+                    break;
+                case 1:
+                    lifesON[0].SetActive(true);
+                    lifesON[1].SetActive(false);
+                    lifesON[2].SetActive(false);
+                    break;
+                case 0:
+                    lifesON[0].SetActive(false);
+                    lifesON[1].SetActive(false);
+                    lifesON[2].SetActive(false);
+                    break;
+                default:
+                    break;
+            }
+        } 
     }
 
     public void ChangeScene(string scene)
