@@ -130,53 +130,37 @@ public abstract class GhostBehavior : MonoBehaviour
     {
         if (time <= 1)
         {
+            Vector3 direction = Vector3.zero;
             switch (actualDirection)
             {
                 case DIRECTION.UP:
-                    transform.position = Vector3.Lerp(initPos, initPos + Vector3.forward, time += Time.deltaTime * speed);
-                    if (time >= 1)
-                    {
-                        time = 1;
-                        actualPosition = transform.position;
-                        CheckNewDirectionByDestinyProximity(destinyPoint);
-                        time = 0;
-                    }
+                    direction = Vector3.forward;
                     break;
                 case DIRECTION.DOWN:
-                    transform.position = Vector3.Lerp(initPos, initPos + Vector3.back, time += Time.deltaTime * speed);
-                    if (time >= 1)
-                    {
-                        time = 1;
-                        actualPosition = transform.position;
-                        CheckNewDirectionByDestinyProximity(destinyPoint);
-                        time = 0;
-                    }
+                    direction = Vector3.back;
                     break;
                 case DIRECTION.RIGHT:
-                    transform.position = Vector3.Lerp(initPos, initPos + Vector3.right, time += Time.deltaTime * speed);
-                    if (time >= 1)
-                    {
-                        time = 1;
-                        actualPosition = transform.position;
-                        CheckNewDirectionByDestinyProximity(destinyPoint);
-                        time = 0;
-                    }
+                    direction = Vector3.right;
                     break;
                 case DIRECTION.LEFT:
-                    transform.position = Vector3.Lerp(initPos, initPos + Vector3.left, time += Time.deltaTime * speed);
-                    if (time >= 1)
-                    {
-                        time = 1;
-                        actualPosition = transform.position;
-                        CheckNewDirectionByDestinyProximity(destinyPoint);
-                        time = 0;
-                    }
+                    direction = Vector3.left;
                     break;
                 case DIRECTION.NONE:
                     CheckNewDirectionByDestinyProximity(destinyPoint);
                     break;
             }
-            
+            if(actualDirection != DIRECTION.NONE)
+            {
+                transform.position = Vector3.Lerp(initPos, initPos + direction, time += Time.deltaTime * speed);
+                if (time >= 1)
+                {
+                    time = 1;
+                    actualPosition = transform.position;
+                    CheckNewDirectionByDestinyProximity(destinyPoint);
+                    time = 0;
+                }
+            }
+
         }
     }
 

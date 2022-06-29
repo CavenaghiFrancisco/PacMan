@@ -74,6 +74,11 @@ public class GameManager : MonoBehaviour
         pillSound.Play();
         ghostsAreAfraid = true;
         OnActivatedPill();
+        if (points == 0)
+        {
+            Time.timeScale = 0;
+            OnWin();
+        }
         Destroy(pill);
     }
 
@@ -174,7 +179,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void RestartPositions()
-    {
+    { //TODO scriptable object innecesario, hacer eventos para cada script
         player.Keys.Clear();
         player.gameObject.transform.position = player.InitPosition;
         player.Position = player.InitPosition;

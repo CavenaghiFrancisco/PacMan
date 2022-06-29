@@ -28,4 +28,9 @@ public class MainMenuManager : MonoBehaviour
             optionsPanel.SetActive(true);
         }
     }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
